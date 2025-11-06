@@ -1,13 +1,14 @@
 import Link from "next/link";
+import { SiGithub, SiGmail, SiLinkedin } from "react-icons/si";
 
 const Hero = () => {
   return (
     <>
       <section
         id="home"
-        className="relative z-10 overflow-hidden bg-white pb-16 pt-[120px] dark:bg-gray-dark md:pb-[120px] md:pt-[150px] xl:pb-[160px] xl:pt-[180px] 2xl:pb-[200px] 2xl:pt-[210px]"
+        className="h-[100vh] relative z-10 overflow-hidden bg-white pb-16 pt-[120px] dark:bg-gray-dark md:pb-[120px] md:pt-[150px] xl:pb-[160px] xl:pt-[180px] 2xl:pb-[200px] 2xl:pt-[210px]"
       >
-        <div className="container">
+        <div className="container h-full content-center text-transparent animate-fade-up">
           <div className="-mx-4 flex flex-wrap">
             <div className="w-full px-4">
               <div
@@ -15,21 +16,35 @@ const Hero = () => {
                 data-wow-delay=".2s"
               >
                 <h1 className="mb-5 text-3xl font-bold leading-tight text-black dark:text-white sm:text-4xl sm:leading-tight md:text-5xl md:leading-tight">
-                  Free and Open-Source Next.js Template for Startup & SaaS
+                  Hey, I'm Risyal Febrianto
                 </h1>
                 <p className="mb-12 text-base !leading-relaxed text-body-color dark:text-body-color-dark sm:text-lg md:text-xl">
-                  Startup is free Next.js template for startups and SaaS
-                  business websites comes with all the essential pages,
-                  components, and sections you need to launch a complete
-                  business website, built-with Next 13.x and Tailwind CSS.
+                  I build reliable software.
+                  <br />
+                  Simple, scalable, and thoughtfully designed.
                 </p>
-                <div className="flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
+                <div className="flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0 px-5 py-3">
                   <Link
                     target="_blank"
-                    href="https://github.com/themewagon/startup-nextjs"
-                    className="inline-block rounded-sm bg-black px-8 py-4 text-base font-semibold text-white duration-300 ease-in-out hover:bg-black/90 dark:bg-white/10 dark:text-white dark:hover:bg-white/5"
+                    href="https://www.linkedin.com/in/risyal-febrianto/"
+                    className="group inline-block rounded-sm bg-black px-4 py-4 text-base font-semibold text-white duration-300 ease-in-out hover:bg-black/90 dark:bg-white/10 dark:text-white dark:hover:bg-white/5"
                   >
-                    Star on GitHub
+                    <SiLinkedin />
+                  </Link>
+                  <Link
+                    target="_blank"
+                    href="https://github.com/risyalf"
+                    className="group inline-block rounded-sm bg-black px-4 py-4 text-base font-semibold text-white duration-300 ease-in-out hover:bg-black/90 dark:bg-white/10 dark:text-white dark:hover:bg-white/5"
+                  >
+                    <SiGithub />
+                  </Link>
+                  <Link
+                    target="_blank"
+                    // href="https://mail.google.com/mail/?view=cm&fs=1&to=risyalfebrianto97@gmail.com&su=Hello Risyal&body=I'm Interested To Talk To You About Something!"
+                    href="mailto:risyalfebrianto97@gmail.com?subject=Hello Risyal&body=I%20Have%20Something%20To%20Talk%20About"
+                    className="group inline-block rounded-sm bg-black px-4 py-4 text-base font-semibold text-white duration-300 ease-in-out hover:bg-black/90 dark:bg-white/10 dark:text-white dark:hover:bg-white/5"
+                  >
+                    <SiGmail />
                   </Link>
                 </div>
               </div>
