@@ -22,13 +22,16 @@ const Footer = () => {
               </Button>
             ))}
           </div>
-          <p>
+          {/* <p>
             <i>{footerData.quote}</i>
-          </p>
+          </p> */}
           <div className="flex gap-4 font-semibold">
-            <a href={footerData.githubCodeLink} className="hover:text-primary">
+            {/* <a href={footerData.githubCodeLink} className="hover:text-primary">
               Check out the code on Github
-            </a>
+            </a> */}
+            <p>
+              2025@risyalfebrianto
+            </p>
           </div>
         </div>
       </div>

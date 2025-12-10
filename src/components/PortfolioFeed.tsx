@@ -6,7 +6,7 @@ import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from 'lucide-react'
 import { cn } from '@/lib/utils';
 import { useEffect } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
-import { projects } from '@/data/portfolioData'; // Importing the projects data
+import { projects, type Project } from '@/data/portfolioData'; // Importing the projects data
 
 const ProjectCarousel = ({ images }: { images: string[] }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel();
@@ -105,7 +105,8 @@ const ProjectCard = ({ project }: { project: Project }) => {
   return (
     <Card className="mb-8 overflow-hidden">
       <CardHeader>
-        <h3 className="text-2xl font-bold">{project.title}</h3>
+        <h3 className="text-2xl font-bold">
+          <a href={project.link} target='_blank'>{project.title}</a></h3>
       </CardHeader>
       <CardContent className="space-y-6">
         <ProjectCarousel images={project.images} />
@@ -181,7 +182,7 @@ const PortfolioFeed = () => {
     <section className="relative z-10 min-h-screen bg-background/95 px-4 py-24 backdrop-blur-sm">
       <div className="mx-auto max-w-3xl">
         <h2 className="mb-12 text-center text-4xl font-bold tracking-tight">
-          Side Projects
+          Projects
         </h2>
         
         <div className="space-y-8">

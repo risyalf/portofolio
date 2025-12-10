@@ -2,6 +2,7 @@ export interface Project {
   id: number;
   title: string;
   summary: string;
+  link: string;
   images: string[];
   tags: string[];
   details: {
@@ -17,20 +18,20 @@ export interface Project {
 export const projects: Project[] = [
   {
     id: 1,
-    title: "Customer Insights Dashboard for E-Commerce",
-    summary: "Developed an interactive Power BI dashboard to analyze customer behavior, sales trends, and marketing performance for an e-commerce company.",
+    title: "E-Commerce Website Development",
+    summary: "Develop e-commerce website with user-friendly interface.",
+    link: "https://listromart.com",
     images: [
-      "https://example.com/dashboard1.jpg",
-      "https://example.com/dashboard2.jpg",
-      "https://example.com/dashboard3.jpg"
+      "/experience/ecommerce1.png",
     ],
-    tags: ["Power BI", "SQL", "Data Visualization", "Customer Analytics", "Business Intelligence"],
+    tags: ["E-Commerce", "MySQL", "User Friendly"],
     details: {
-      challenge: "The company lacked a centralized reporting system to track customer engagement, purchase patterns, and marketing campaign effectiveness.",
-      solution: "Designed and implemented a Power BI dashboard integrating data from Google Analytics, CRM systems, and sales records, providing real-time insights.",
+      challenge: "The company needed a user-friendly e-commerce platform to enhance customer experience and streamline online sales.",
+      solution: "Developed a responsive e-commerce website using modern web technologies, ensuring seamless navigation and efficient checkout processes.",
       impact: [
-        "Increased marketing ROI by 25% through data-driven campaign adjustments.",
-        "Enhanced customer segmentation, leading to a 15% improvement in personalized recommendations and repeat purchases."
+        "Increased online sales by 30% within the first quarter after launch.",
+        "Received positive feedback from customers regarding the website's usability.",
+        "Reduced cart abandonment rates by 15% through optimized checkout flow."
       ]
     }
   },

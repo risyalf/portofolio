@@ -37,36 +37,36 @@ const Hero = () => {
     const animate = () => {
       if (!ctx || !canvas) return;
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      const isDarkMode = document.documentElement.classList.contains('dark');
+      // const isDarkMode = document.documentElement.classList.contains('dark');
       
-      stars.current.forEach((star) => {
-        star.y += star.speed;
-        if (star.y > canvas.height) {
-          star.y = 0;
-          star.x = Math.random() * canvas.width;
-        }
+      // stars.current.forEach((star) => {
+      //   star.y += star.speed;
+      //   if (star.y > canvas.height) {
+      //     star.y = 0;
+      //     star.x = Math.random() * canvas.width;
+      //   }
 
-        const dx = star.x - mousePosition.current.x;
-        const dy = star.y - mousePosition.current.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        const maxDistance = 100;
+      //   const dx = star.x - mousePosition.current.x;
+      //   const dy = star.y - mousePosition.current.y;
+      //   const distance = Math.sqrt(dx * dx + dy * dy);
+      //   const maxDistance = 100;
 
-        if (distance < maxDistance) {
-          const angle = Math.atan2(dy, dx);
-          const push = (1 - distance / maxDistance) * 2;
-          star.x += Math.cos(angle) * push;
-          star.y += Math.sin(angle) * push;
-        }
+      //   if (distance < maxDistance) {
+      //     const angle = Math.atan2(dy, dx);
+      //     const push = (1 - distance / maxDistance) * 2;
+      //     star.x += Math.cos(angle) * push;
+      //     star.y += Math.sin(angle) * push;
+      //   }
 
-        ctx.fillStyle = isDarkMode ? `rgba(255, 255, 255, ${star.opacity})` : `rgba(0, 0, 0, ${star.opacity * 0.7})`;
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-        ctx.fill();
-      });
+      //   ctx.fillStyle = isDarkMode ? `rgba(255, 255, 255, ${star.opacity})` : `rgba(0, 0, 0, ${star.opacity * 0.7})`;
+      //   ctx.beginPath();
+      //   ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+      //   ctx.fill();
+      // });
 
-      requestAnimationFrame(animate);
+      // requestAnimationFrame(animate);
     };
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -95,7 +95,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen pt-10">
       <canvas
         ref={canvasRef}
         className="absolute inset-0 z-0"
