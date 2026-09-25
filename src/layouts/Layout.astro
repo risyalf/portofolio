@@ -9,19 +9,22 @@ const { title } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Risyal Febrianto - Developer Portfolio" />
+    <meta name="description" content="Risyal Febrianto - Full-Stack Developer Portfolio" />
     <meta name="viewport" content="width=device-width" />
     <meta name="author" content="Risyal Febrianto" />
-    <meta name="keywords" content="Business Intelligence, BI Developer, Data Analytics, Dashboard Development" />
+    <meta name="keywords" content="Full-Stack Developer, Web Developer, Laravel, React, Node.js, PHP, TypeScript" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <ViewTransitions />
   </head>
-  <body>
+  <body class="font-ui antialiased">
     <slot />
   </body>
 </html>

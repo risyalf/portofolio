@@ -1,169 +1,146 @@
-import React, { useEffect, useRef } from 'react';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
-import { ArrowDown, Github, Linkedin, Mail } from 'lucide-react';
-import { heroData } from '../data/heroData';
+import React, { useEffect, useState } from 'react';
+import { Github, Linkedin, Mail, ExternalLink } from 'lucide-react';
+import { heroData } from '@/data/heroData';
+import { cn } from '@/lib/utils';
 
 const Hero = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const stars = useRef<Star[]>([]);
-  const mousePosition = useRef({ x: 0, y: 0 });
+  const [typedLines, setTypedLines] = useState<string[]>([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const [showCursor, setShowCursor] = useState(true);
+
+  const commands = [
+    { prompt: '$ whoami', output: 'Risyal Febrianto' },
+    { prompt: '$ cat role.txt', output: 'Full-Stack Developer' },
+  ];
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    // Blinking cursor
+    const cursorInterval = setInterval(() => {
+      setShowCursor(prev => !prev);
+    }, 530);
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    // Set canvas size
-    const setCanvasSize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    // Typing animation sequence
+    const runTyping = async () => {
+      setIsTyping(true);
+      for (let i = 0; i < commands.length; i++) {
+        const cmd = commands[i];
+        
+        // Type the prompt
+        await typeText(cmd.prompt, i * 2);
+        await sleep(300);
+        
+        // Type the output
+        await typeText(cmd.output, i * 2 + 1);
+        await sleep(500);
+        
+        // Add to typed lines
+        setTypedLines(prev => [...prev, cmd.prompt, cmd.output]);
+      }
+      setIsTyping(false);
     };
 
-    // Initialize stars
-    const initStars = () => {
-      stars.current = Array.from({ length: 200 }, () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 3,
-        opacity: Math.random() * 0.5 + 0.2,
-        speed: Math.random() * 0.4 + 0.1,
-      }));
+    const typeText = (text: string, lineIndex: number) => {
+      return new Promise<void>(resolve => {
+        let charIndex = 0;
+        const charInterval = setInterval(() => {
+          if (charIndex < text.length) {
+            setTypedLines(prev => {
+              const newLines = [...prev];
+              if (newLines.length > lineIndex) {
+                newLines[lineIndex] = text.slice(0, charIndex + 1);
+              } else {
+                newLines.push(text.slice(0, charIndex + 1));
+              }
+              return newLines;
+            });
+            charIndex++;
+          } else {
+            clearInterval(charInterval);
+            resolve();
+          }
+        }, 40); // typing speed
+      });
     };
 
-    // Animation loop
-    const animate = () => {
-      if (!ctx || !canvas) return;
+    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-      // ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // const isDarkMode = document.documentElement.classList.contains('dark');
-      
-      // stars.current.forEach((star) => {
-      //   star.y += star.speed;
-      //   if (star.y > canvas.height) {
-      //     star.y = 0;
-      //     star.x = Math.random() * canvas.width;
-      //   }
-
-      //   const dx = star.x - mousePosition.current.x;
-      //   const dy = star.y - mousePosition.current.y;
-      //   const distance = Math.sqrt(dx * dx + dy * dy);
-      //   const maxDistance = 100;
-
-      //   if (distance < maxDistance) {
-      //     const angle = Math.atan2(dy, dx);
-      //     const push = (1 - distance / maxDistance) * 2;
-      //     star.x += Math.cos(angle) * push;
-      //     star.y += Math.sin(angle) * push;
-      //   }
-
-      //   ctx.fillStyle = isDarkMode ? `rgba(255, 255, 255, ${star.opacity})` : `rgba(0, 0, 0, ${star.opacity * 0.7})`;
-      //   ctx.beginPath();
-      //   ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-      //   ctx.fill();
-      // });
-
-      // requestAnimationFrame(animate);
-    };
-
-    const handleMouseMove = (e: MouseEvent) => {
-      mousePosition.current = {
-        x: e.clientX,
-        y: e.clientY,
-      };
-    };
-
-    const handleResize = () => {
-      setCanvasSize();
-      initStars();
-    };
-
-    setCanvasSize();
-    initStars();
-    animate();
-
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('resize', handleResize);
+    runTyping();
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('resize', handleResize);
+      clearInterval(cursorInterval);
     };
   }, []);
 
   return (
-    <div className="relative min-h-screen pt-10">
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 z-0"
-        style={{ background: 'transparent' }}
-      />
-      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 text-center">
-        <img
-          src={heroData.profilePicture}
-          alt={heroData.name}
-          className="mb-8 h-48 w-48 rounded-full border-4 border-primary object-cover shadow-lg"
-        />
-        <h1 className="mb-4 text-4xl font-bold tracking-tight sm:text-6xl">
-          {heroData.name}
-        </h1>
-        <p className="mb-6 text-xl text-muted-foreground sm:text-2xl">
-          {heroData.title}
-        </p>
-        <p className="mb-8 max-w-2xl text-muted-foreground">
+    <header className="relative min-h-screen flex items-center justify-center px-4 pt-20 pb-16">
+      <div className="container-narrow">
+        {/* Terminal Frame */}
+        <div className="terminal-frame max-w-2xl mx-auto" role="region" aria-label="Terminal introduction">
+          <div className="terminal-content font-mono text-sm" style={{ lineHeight: '1.8' }}>
+            <div className="space-y-3">
+              {typedLines.map((line, index) => (
+                <div key={index} className="flex items-baseline gap-3">
+                  <span className="text-[hsl(var(--fg-muted))] whitespace-nowrap">
+                    {line.startsWith('$') ? line : ''}
+                  </span>
+                  <span 
+                    className={cn(
+                      "whitespace-pre-wrap",
+                      line.startsWith('$') ? 'text-[hsl(var(--accent))]' : 'text-[hsl(var(--fg))] font-medium'
+                    )}
+                  >
+                    {line.startsWith('$') ? '' : line}
+                    {index === typedLines.length - 1 && isTyping && showCursor && (
+                      <span className="animate-blink ml-0.5" aria-hidden="true">█</span>
+                    )}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* Action buttons after typing completes */}
+            {!isTyping && (
+              <div className="mt-8 pt-6 border-t border-[hsl(var(--border))] flex flex-wrap items-center gap-4">
+                <a
+                  href={heroData.contact.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary flex items-center gap-2"
+                  aria-label="View LinkedIn profile"
+                >
+                  <Linkedin className="h-4 w-4" aria-hidden="true" />
+                  LinkedIn
+                  <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                </a>
+                <a
+                  href={`mailto:${heroData.contact.email}`}
+                  className="btn-secondary"
+                  aria-label="Send email"
+                >
+                  <Mail className="h-4 w-4 inline-block align-middle mr-2" aria-hidden="true" />
+                  Email Me
+                </a>
+                <a
+                  href={heroData.contact.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-ghost flex items-center gap-2"
+                  aria-label="View GitHub profile"
+                >
+                  <Github className="h-4 w-4" aria-hidden="true" />
+                  GitHub
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Subtle description below terminal */}
+        <p className="text-body text-[hsl(var(--fg-muted))] max-w-2xl mt-10 text-center md:text-left">
           {heroData.description}
         </p>
-        <div className="mb-12 flex space-x-4">
-          <div className="relative group">
-            <Button variant="outline" size="icon" className="rounded-full group-hover:tooltip" aria-label="Github">
-              <a
-                href={heroData.contact.github}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Github className="h-5 w-5" />
-              </a>
-            </Button>
-            <span className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded-md shadow-md">
-              Github
-            </span>
-          </div>
-          <Button asChild variant="default" size="lg" className="rounded-full">
-            <a
-              href={heroData.contact.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-            >               
-              LinkedIn
-            </a>
-          </Button>
-          <div className="relative group">
-            <Button variant="outline" size="icon" className="rounded-full group-hover:tooltip" aria-label="Mail">
-              <a
-                href={`mailto:${heroData.contact.email}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Mail className="h-5 w-5" />
-              </a>
-            </Button>
-            <span className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded-md shadow-md">
-              email
-            </span>
-          </div>
-        </div>
-        <div className="mb-4 flex flex-wrap gap-2">
-          {heroData.skills.map((skill) => (
-            <Badge key={skill} variant="secondary" className="text-sm">
-              {skill}
-            </Badge>
-          ))}
-        </div>
       </div>
-    </div>
+    </header>
   );
 };
 

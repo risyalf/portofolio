@@ -1,38 +1,32 @@
 import React from 'react';
 import { Github, Linkedin, Mail } from 'lucide-react';
-import { Button } from './ui/button';
-import { Separator } from './ui/separator';
-import { footerData } from '../data/footerData';
+import { footerData } from '@/data/footerData';
 
 const Footer = () => {
   return (
-    <footer className="relative z-10 bg-background/95 px-4 pb-11 backdrop-blur-sm">
-      <div className="mx-auto max-w-6xl">
-        <Separator className="mb-8" />
-        <h3 className="mb-4 text-lg font-semibold text-center md:text-left">Let's Connect</h3>
-        <div className="flex flex-col items-center justify-between gap-4 text-center text-sm text-muted-foreground md:flex-row md:text-left">
-          <div className="flex gap-4">
+    <footer className="border-t border-[hsl(var(--border))] bg-[hsl(var(--bg-elevated))] px-4 py-10" role="contentinfo">
+      <div className="container-narrow">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <p className="text-xs text-[hsl(var(--fg-subtle))]">
+            2025 &copy; Risyal Febrianto
+          </p>
+
+          <nav className="flex items-center gap-4" aria-label="Social links">
             {footerData.socialLinks.map((link) => (
-              <Button key={link.name} variant="outline" size="icon" className="rounded-full">
-                <a href={link.url} target="_blank" rel="noopener noreferrer">
-                  {link.icon === 'Github' && <Github className="h-5 w-5" />}
-                  {link.icon === 'Linkedin' && <Linkedin className="h-5 w-5" />}
-                  {link.icon === 'Mail' && <Mail className="h-5 w-5" />}
-                </a>
-              </Button>
+              <a
+                key={link.name}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[hsl(var(--fg-muted))] hover:text-[hsl(var(--accent))] transition-colors p-2 rounded-lg hover:bg-[hsl(var(--bg-hover))]"
+                aria-label={link.name}
+              >
+                {link.icon === 'Github' && <Github className="h-5 w-5" aria-hidden="true" />}
+                {link.icon === 'Linkedin' && <Linkedin className="h-5 w-5" aria-hidden="true" />}
+                {link.icon === 'Mail' && <Mail className="h-5 w-5" aria-hidden="true" />}
+              </a>
             ))}
-          </div>
-          {/* <p>
-            <i>{footerData.quote}</i>
-          </p> */}
-          <div className="flex gap-4 font-semibold">
-            {/* <a href={footerData.githubCodeLink} className="hover:text-primary">
-              Check out the code on Github
-            </a> */}
-            <p>
-              2025@risyalfebrianto
-            </p>
-          </div>
+          </nav>
         </div>
       </div>
     </footer>

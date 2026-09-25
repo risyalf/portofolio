@@ -1,98 +1,82 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader } from './ui/card';
-import { Badge } from './ui/badge';
-import { Button } from './ui/button';
-import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { ChevronDown, ChevronUp, ExternalLink, Github } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useEffect } from 'react';
-import useEmblaCarousel from 'embla-carousel-react';
-import { projects, type Project } from '@/data/portfolioData'; // Importing the projects data
+import { projects, type Project } from '@/data/portfolioData';
 
 const ProjectCarousel = ({ images }: { images: string[] }) => {
-  const [emblaRef, emblaApi] = useEmblaCarousel();
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [canScrollPrev, setCanScrollPrev] = useState(false);
-  const [canScrollNext, setCanScrollNext] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  useEffect(() => {
-    if (emblaApi) {
-      emblaApi.on('select', () => {
-        setSelectedIndex(emblaApi.selectedScrollSnap());
-        setCanScrollPrev(emblaApi.canScrollPrev());
-        setCanScrollNext(emblaApi.canScrollNext());
-      });
-
-      // Initial state
-      setCanScrollPrev(emblaApi.canScrollPrev());
-      setCanScrollNext(emblaApi.canScrollNext());
-    }
-  }, [emblaApi]);
+  if (images.length <= 1) {
+    return (
+      <div className="aspect-video rounded-t-lg overflow-hidden bg-[hsl(var(--border))]">
+        <img
+          src={images[0]}
+          alt="Project screenshot"
+          className="h-full w-full object-cover"
+        />
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-4">
-      <div className="relative">
-        <div ref={emblaRef} className="overflow-hidden rounded-lg">
-          <div className="flex">
-            {images.map((image, index) => (
-              <div className="relative flex-[0_0_100%]" key={index}>
-                <div className="aspect-video">
-                  <img
-                    src={image}
-                    alt={`Slide ${index + 1}`}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <Button
-          variant="secondary"
-          size="icon"
-          className={cn(
-            "absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-background/80 shadow-lg hover:bg-background",
-            !canScrollPrev && "opacity-50 cursor-not-allowed"
-          )}
-          onClick={() => emblaApi?.scrollPrev()}
-          disabled={!canScrollPrev}
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="secondary"
-          size="icon"
-          className={cn(
-            "absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-background/80 shadow-lg hover:bg-background",
-            !canScrollNext && "opacity-50 cursor-not-allowed"
-          )}
-          onClick={() => emblaApi?.scrollNext()}
-          disabled={!canScrollNext}
-        >
-          <ChevronRight className="h-4 w-4" />
-        </Button>
+    <div className="relative aspect-video rounded-t-lg overflow-hidden bg-[hsl(var(--border))]">
+      <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: currentIndex === 0 ? 1 : 0 }}>
+        <img
+          src={images[0]}
+          alt="Project screenshot 1"
+          className="h-full w-full object-cover"
+        />
       </div>
+      {images.length > 1 && (
+        <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: currentIndex === 1 ? 1 : 0 }}>
+          <img
+            src={images[1]}
+            alt="Project screenshot 2"
+            className="h-full w-full object-cover"
+          />
+        </div>
+      )}
+      {images.length > 2 && (
+        <div className="absolute inset-0 transition-opacity duration-300" style={{ opacity: currentIndex === 2 ? 1 : 0 }}>
+          <img
+            src={images[2]}
+            alt="Project screenshot 3"
+            className="h-full w-full object-cover"
+          />
+        </div>
+      )}
 
-      {/* Thumbnails */}
-      <div className="flex gap-2 overflow-auto pb-2">
-        {images.map((image, index) => (
+      {/* Navigation */}
+      <button
+        onClick={() => setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))}
+        className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-[hsl(var(--bg-elevated))] border border-[hsl(var(--border))] hover:border-[hsl(var(--accent))] hover:bg-[hsl(var(--accent))] hover:text-[hsl(var(--bg))] text-[hsl(var(--fg-muted))] transition-all"
+        aria-label="Previous screenshot"
+      >
+        <ChevronUp className="h-5 w-5 rotate-90" aria-hidden="true" />
+      </button>
+      <button
+        onClick={() => setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))}
+        className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-[hsl(var(--bg-elevated))] border border-[hsl(var(--border))] hover:border-[hsl(var(--accent))] hover:bg-[hsl(var(--accent))] hover:text-[hsl(var(--bg))] text-[hsl(var(--fg-muted))] transition-all"
+        aria-label="Next screenshot"
+      >
+        <ChevronUp className="h-5 w-5 -rotate-90" aria-hidden="true" />
+      </button>
+
+      {/* Indicators */}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+        {images.map((_, index) => (
           <button
             key={index}
+            onClick={() => setCurrentIndex(index)}
             className={cn(
-              "relative flex-0 min-w-[100px] cursor-pointer overflow-hidden rounded-md border-2 transition-all",
-              selectedIndex === index
-                ? "border-primary"
-                : "border-transparent opacity-70 hover:opacity-100"
+              "w-2 h-2 rounded-full transition-all",
+              index === currentIndex
+                ? "bg-[hsl(var(--accent))] w-6"
+                : "bg-[hsl(var(--fg-muted))] hover:bg-[hsl(var(--accent))]"
             )}
-            onClick={() => emblaApi?.scrollTo(index)}
-          >
-            <div className="aspect-video w-[100px]">
-              <img
-                src={image}
-                alt={`Thumbnail ${index + 1}`}
-                className="h-full w-full object-cover"
-              />
-            </div>
-          </button>
+            aria-label={`Go to screenshot ${index + 1}`}
+            aria-current={index === currentIndex ? 'true' : 'false'}
+          />
         ))}
       </div>
     </div>
@@ -101,91 +85,146 @@ const ProjectCarousel = ({ images }: { images: string[] }) => {
 
 const ProjectCard = ({ project }: { project: Project }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const detailsRef = useRef<HTMLDivElement>(null);
+  const [contentHeight, setContentHeight] = useState(0);
+
+  useEffect(() => {
+    if (detailsRef.current) {
+      setContentHeight(detailsRef.current.scrollHeight);
+    }
+  }, [isExpanded]);
 
   return (
-    <Card className="mb-8 overflow-hidden">
-      <CardHeader>
-        <h3 className="text-2xl font-bold">
-          <a href={project.link} target='_blank'>{project.title}</a></h3>
-      </CardHeader>
-      <CardContent className="space-y-6">
+    <article className="card-base overflow-hidden" role="listitem">
+      {/* Thumbnail */}
+      <div className="relative">
         <ProjectCarousel images={project.images} />
+      </div>
 
-        <div className="space-y-4">
-          <p className="text-muted-foreground">{project.summary}</p>
-          
-          <div className="flex flex-wrap gap-2">
-            {project.tags.map((tag) => (
-              <Badge key={tag} variant="secondary">
-                {tag}
-              </Badge>
-            ))}
-          </div>
+      <div className="p-6 space-y-6">
+        <header>
+          <h3 className="text-heading text-xl mb-2">
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-base hover:no-underline"
+            >
+              {project.title}
+            </a>
+          </h3>
+          <p className="text-body text-[hsl(var(--fg-muted))]">
+            {project.summary}
+          </p>
+        </header>
 
-          <div
-            className={`space-y-4 overflow-hidden transition-all duration-500 ease-in-out ${
-              isExpanded ? 'max-h-[1000px]' : 'max-h-0'
-            }`}
-          >
-            <div className="rounded-lg bg-muted/50 p-4 space-y-4">
-              <div>
-                <h4 className="font-semibold mb-2">Challenge</h4>
-                <p className="text-muted-foreground">{project.details.challenge}</p>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold mb-2">Solution</h4>
-                <p className="text-muted-foreground">{project.details.solution}</p>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold mb-2">Impact</h4>
-                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                  {project.details.impact.map((item, index) => (
-                    <li key={index}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-              {project.externalLink && (
-                <Button variant="link" className="flex items-center gap-2 text-md" asChild>
-                  <a href={project.externalLink.url} target="_blank" rel="noopener noreferrer">
+        {/* Tech Tags */}
+        <div className="flex flex-wrap gap-2" role="list" aria-label="Technologies used">
+          {project.tags.map((tag) => (
+            <span key={tag} className="tag-mono" role="listitem">
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        {/* Expandable Details */}
+        <div
+          ref={detailsRef}
+          className={cn(
+            "overflow-hidden transition-all duration-300 ease-in-out",
+            isExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
+          )}
+          style={{ maxHeight: isExpanded ? `${contentHeight}px` : '0' }}
+        >
+          <div className="pt-4 border-t border-[hsl(var(--border))] space-y-6" id={`project-details-${project.id}`}>
+            <div className="space-y-2">
+              <h4 className="text-heading text-sm font-semibold text-[hsl(var(--fg))]">Challenge</h4>
+              <p className="text-body text-[hsl(var(--fg-muted))]">{project.details.challenge}</p>
+            </div>
+
+            <div className="space-y-2">
+              <h4 className="text-heading text-sm font-semibold text-[hsl(var(--fg))]">Solution</h4>
+              <p className="text-body text-[hsl(var(--fg-muted))]">{project.details.solution}</p>
+            </div>
+
+            <div className="space-y-2">
+              <h4 className="text-heading text-sm font-semibold text-[hsl(var(--fg))]">Impact</h4>
+              <ul className="space-y-1.5 pl-4" role="list">
+                {project.details.impact.map((item, index) => (
+                  <li key={index} className="text-body text-[hsl(var(--fg-muted))] relative before:absolute before:left-[-1rem] before:top-[0.6rem] before:w-1.5 before:h-1.5 before:rounded-full before:bg-[hsl(var(--accent))]">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {(project.externalLink || project.link) && (
+              <div className="flex flex-wrap gap-3 pt-2 border-t border-[hsl(var(--border))]">
+                <a
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-secondary flex items-center gap-2 text-sm"
+                >
+                  <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                  Live Demo
+                </a>
+                {project.externalLink && (
+                  <a
+                    href={project.externalLink.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-secondary flex items-center gap-2 text-sm"
+                  >
+                    <Github className="h-4 w-4" aria-hidden="true" />
                     {project.externalLink.title}
                   </a>
-                </Button>
-              )}
-            </div>
+                )}
+              </div>
+            )}
           </div>
+        </div>
 
-          <Button
-            variant="ghost"
-            className="w-full"
-            onClick={() => setIsExpanded(!isExpanded)}
-          >
+        {/* Expand/Collapse Button */}
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="btn-ghost w-full justify-start py-3 text-left"
+          aria-expanded={isExpanded}
+          aria-controls={`project-details-${project.id}`}
+        >
+          <span className="flex items-center gap-2">
             {isExpanded ? (
               <>
-                <ChevronUp className="mr-2 h-4 w-4" /> Show Less
+                <ChevronUp className="h-4 w-4" aria-hidden="true" />
+                Show Less
               </>
             ) : (
               <>
-                <ChevronDown className="mr-2 h-4 w-4" /> See More
+                <ChevronDown className="h-4 w-4" aria-hidden="true" />
+                See Details
               </>
             )}
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+          </span>
+        </button>
+      </div>
+    </article>
   );
 };
 
 const PortfolioFeed = () => {
   return (
-    <section className="relative z-10 min-h-screen bg-background/95 px-4 py-24 backdrop-blur-sm">
-      <div className="mx-auto max-w-3xl">
-        <h2 className="mb-12 text-center text-4xl font-bold tracking-tight">
-          Projects
-        </h2>
-        
-        <div className="space-y-8">
+    <section id="projects" className="section-gap bg-[hsl(var(--bg-elevated))]" aria-labelledby="projects-heading">
+      <div className="container-narrow">
+        <header className="mb-12">
+          <h2 id="projects-heading" className="text-heading text-heading-xl">
+            Projects
+          </h2>
+          <p className="text-body text-[hsl(var(--fg-muted))] mt-3 max-w-xl">
+            Selected work across enterprise systems, e-commerce, and interactive applications.
+          </p>
+        </header>
+
+        <div className="space-y-6" role="list">
           {projects.map((project) => (
             <ProjectCard key={project.id} project={project} />
           ))}
