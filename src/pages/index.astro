@@ -1,75 +1,22 @@
 ---
 import '@/styles/globals.css'
 import Layout from '../layouts/Layout.astro';
-import { MoonIcon, SunIcon } from "lucide-react"
 import Hero from '@/components/Hero';
 import About from '@/components/About';
 import Experience from '@/components/Experience';
 import PortfolioFeed from '@/components/PortfolioFeed';
+import BlogSection from '@/components/BlogSection.astro';
 import Footer from '@/components/Footer';
 import { config } from '../data/config';
 ---
 
-<Layout title={config.siteTitle}>
-  <head>
-    <meta name="description" content={config.description} />
-    <meta name="keywords" content={config.keywords} />
-    <link rel="icon" href={config.favicon} />
-    <meta property="og:title" content={config.siteTitle} />
-    <meta property="og:description" content={config.description} />
-    <meta property="og:image" content="/risyal.jpeg" />
-    <meta property="og:url" content="https://risyal.my.id" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={config.siteTitle} />
-    <meta name="twitter:description" content={config.description} />
-    <meta name="twitter:image" content="/risyal.jpeg" />
-  </head>
-  <main class="min-h-screen">
-    <button
-      id="theme-toggle"
-      class="fixed top-4 right-4 z-50 p-2 rounded-full bg-[hsl(var(--bg-elevated))] border border-[hsl(var(--border))] hover:border-[hsl(var(--accent))] hover:bg-[hsl(var(--accent))] hover:text-[hsl(var(--bg))] text-[hsl(var(--fg-muted))] transition-all"
-      aria-label="Toggle theme"
-      type="button"
-    >
-      <SunIcon className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" aria-hidden="true" />
-      <MoonIcon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" aria-hidden="true" />
-      <span class="sr-only">Toggle theme</span>
-    </button>
+<Layout title={config.siteTitle} description={config.description}>
+  <main class="min-h-screen pt-12">
     <Hero client:load />
     <About client:visible />
     <Experience client:visible />
     <PortfolioFeed client:visible />
+    <BlogSection />
     <Footer client:visible />
   </main>
 </Layout>
-
-<script>
-  const themeToggle = document.getElementById('theme-toggle');
-  
-  // Check for saved theme preference or default to system preference
-  if (typeof localStorage !== 'undefined') {
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    if (savedTheme === 'light' || (!savedTheme && !prefersDark)) {
-      document.documentElement.classList.add('light');
-      document.documentElement.removeAttribute('data-theme');
-      localStorage.setItem('theme', 'light');
-    } else {
-      document.documentElement.classList.remove('light');
-      document.documentElement.setAttribute('data-theme', 'dark');
-      localStorage.setItem('theme', 'dark');
-    }
-  }
-
-  // Theme toggle functionality
-  themeToggle?.addEventListener('click', () => {
-    const isLight = document.documentElement.classList.toggle('light');
-    if (isLight) {
-      document.documentElement.removeAttribute('data-theme');
-    } else {
-      document.documentElement.setAttribute('data-theme', 'dark');
-    }
-    localStorage.setItem('theme', isLight ? 'light' : 'dark');
-  });
-</script>

@@ -8,7 +8,8 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "generate:blog": "node scripts/generate-laravel-blog.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^3.6.2",

@@ -1,0 +1,158 @@
+---
+import '@/styles/globals.css';
+import Layout from '@/layouts/Layout.astro';
+import Footer from '@/components/Footer';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { ArrowLeft, Calendar, Clock, User, Tag, Sparkles, Copy } from 'lucide-react';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+
+const formattedDate = post.data.pubDate.toLocaleDateString('en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+---
+
+<Layout
+  title={`${post.data.title} — Risyal Febrianto`}
+  description={post.data.description}
+>
+  <main class="min-h-screen pt-28 pb-20 px-4">
+    <div class="max-w-3xl mx-auto space-y-10">
+      <!-- Breadcrumb / Back button -->
+      <nav class="flex items-center justify-between text-xs font-mono text-[hsl(var(--fg-muted))]">
+        <a
+          href="/blog"
+          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--bg-elevated))] hover:border-[hsl(var(--accent))] hover:text-[hsl(var(--accent))] transition-all"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Back to Articles</span>
+        </a>
+
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span>~/blog/{post.slug}</span>
+        </div>
+      </nav>
+
+      <!-- Post Header -->
+      <header class="space-y-6">
+        <div class="flex flex-wrap items-center gap-3 text-xs font-mono">
+          <span class="px-2.5 py-1 rounded bg-[hsl(var(--accent))/0.15] text-[hsl(var(--accent))] border border-[hsl(var(--accent))/0.3] font-semibold">
+            {post.data.category}
+          </span>
+          {post.data.featured && (
+            <span class="flex items-center gap-1 px-2.5 py-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+              <Sparkles className="w-3.5 h-3.5" /> Featured
+            </span>
+          )}
+        </div>
+
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-mono font-bold tracking-tight text-[hsl(var(--fg))] leading-tight">
+          {post.data.title}
+        </h1>
+
+        <p class="text-base sm:text-lg text-[hsl(var(--fg-muted))] leading-relaxed">
+          {post.data.description}
+        </p>
+
+        <!-- Metadata row -->
+        <div class="flex flex-wrap items-center gap-y-3 gap-x-6 py-4 border-y border-[hsl(var(--border))] text-xs font-mono text-[hsl(var(--fg-muted))]">
+          <div class="flex items-center gap-1.5">
+            <User className="w-3.5 h-3.5 text-[hsl(var(--accent))]" />
+            <span>{post.data.author}</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <Calendar className="w-3.5 h-3.5 text-[hsl(var(--accent))]" />
+            <span>{formattedDate}</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <Clock className="w-3.5 h-3.5 text-[hsl(var(--accent))]" />
+            <span>{post.data.readTime}</span>
+          </div>
+        </div>
+
+        <!-- Tags -->
+        <div class="flex flex-wrap gap-2">
+          {post.data.tags.map((tag) => (
+            <span
+              key={tag}
+              class="text-xs font-mono px-2.5 py-1 rounded-md bg-[hsl(var(--bg-elevated))] text-[hsl(var(--fg-muted))] border border-[hsl(var(--border))]"
+            >
+              #{tag}
+            </span>
+          ))}
+        </div>
+      </header>
+
+      <!-- Article Content -->
+      <article class="prose-article pt-6 border-t border-[hsl(var(--border))]">
+        <Content />
+      </article>
+
+      <!-- Post End / Automation Notice & Actions -->
+      <div class="mt-16 pt-8 border-t border-[hsl(var(--border))] space-y-6">
+        <div class="card-base p-6 space-y-3 bg-[hsl(var(--bg-elevated))] border-l-4 border-l-[hsl(var(--accent))]">
+          <div class="flex items-center gap-2 text-xs font-mono font-semibold text-[hsl(var(--accent))]">
+            <span>⚡ AUTOMATED LARAVEL BLOG PIPELINE</span>
+          </div>
+          <p class="text-sm text-[hsl(var(--fg-muted))] leading-relaxed">
+            Blog ini diperbarui otomatis setiap malam pukul 21:00 WIB menggunakan AI automation pipeline. Setiap artikel menyajikan studi kasus, optimasi performa, atau panduan arsitektur modern dalam ekosistem Laravel & PHP.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-4 pt-4">
+          <a
+            href="/blog"
+            class="btn-secondary text-xs font-mono inline-flex items-center gap-2"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Semua Artikel Laravel</span>
+          </a>
+
+          <button
+            id="copy-link-btn"
+            type="button"
+            class="btn-ghost text-xs font-mono inline-flex items-center gap-2"
+          >
+            <Copy className="w-3.5 h-3.5" />
+            <span id="copy-text">Bagikan Tautan</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+  <Footer client:visible />
+</Layout>
+
+<script>
+  const copyBtn = document.getElementById('copy-link-btn');
+  const copyText = document.getElementById('copy-text');
+  copyBtn?.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      if (copyText) {
+        copyText.textContent = 'Tautan Disalin! ✓';
+        setTimeout(() => {
+          copyText.textContent = 'Bagikan Tautan';
+        }, 2000);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  });
+</script>

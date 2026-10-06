@@ -1,0 +1,95 @@
+---
+import '@/styles/globals.css';
+import Layout from '@/layouts/Layout.astro';
+import Footer from '@/components/Footer';
+import BlogFeed, { type BlogPostItem } from '@/components/blog/BlogFeed';
+import { getCollection } from 'astro:content';
+import { Terminal, Cpu, Clock, Rss } from 'lucide-react';
+
+const allPosts = await getCollection('blog');
+
+// Sort by pubDate descending
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+);
+
+const formattedPosts: BlogPostItem[] = sortedPosts.map((post) => ({
+  slug: post.slug,
+  title: post.data.title,
+  description: post.data.description,
+  pubDate: post.data.pubDate.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  }),
+  category: post.data.category,
+  tags: post.data.tags,
+  readTime: post.data.readTime,
+  author: post.data.author,
+  featured: post.data.featured,
+}));
+---
+
+<Layout
+  title="Laravel Engineering Blog — Risyal Febrianto"
+  description="Deep dives into modern Laravel architecture, high-throughput queues, Reverb WebSockets, and database performance. Auto-generated every night at 21:00 WIB."
+>
+  <main class="min-h-screen pt-28 pb-20 px-4">
+    <div class="max-w-4xl mx-auto space-y-12">
+      <!-- Blog Hero / Header -->
+      <header class="space-y-6">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[hsl(var(--bg-elevated))] border border-[hsl(var(--border))] text-xs font-mono text-[hsl(var(--accent))]">
+          <Terminal className="w-3.5 h-3.5" />
+          <span>~/blog/laravel</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-[hsl(var(--accent))] animate-pulse"></span>
+        </div>
+
+        <div class="space-y-3">
+          <h1 class="text-3xl sm:text-4xl md:text-5xl font-mono font-bold tracking-tight text-[hsl(var(--fg))]">
+            Laravel Engineering Insights
+          </h1>
+          <p class="text-base sm:text-lg text-[hsl(var(--fg-muted))] max-w-2xl leading-relaxed">
+            Catatan arsitektur teknis, optimasi performa skala besar, sistem antrean, dan eksplorasi fitur terbaru ekosistem Laravel. Diperbarui secara otomatis setiap hari pukul 21:00 WIB.
+          </p>
+        </div>
+
+        <!-- Telemetry / Stats Cards -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
+          <div class="card-base p-3.5 space-y-1">
+            <div class="flex items-center gap-2 text-xs font-mono text-[hsl(var(--fg-muted))]">
+              <Cpu className="w-3.5 h-3.5 text-[hsl(var(--accent))]" />
+              <span>Domain</span>
+            </div>
+            <div class="text-sm font-mono font-semibold text-[hsl(var(--fg))]">
+              Laravel & PHP 8.3+
+            </div>
+          </div>
+
+          <div class="card-base p-3.5 space-y-1">
+            <div class="flex items-center gap-2 text-xs font-mono text-[hsl(var(--fg-muted))]">
+              <Clock className="w-3.5 h-3.5 text-[hsl(var(--accent))]" />
+              <span>Cron Cadence</span>
+            </div>
+            <div class="text-sm font-mono font-semibold text-emerald-400">
+              21:00 WIB Daily
+            </div>
+          </div>
+
+          <div class="card-base p-3.5 space-y-1 col-span-2 sm:col-span-1">
+            <div class="flex items-center gap-2 text-xs font-mono text-[hsl(var(--fg-muted))]">
+              <Rss className="w-3.5 h-3.5 text-[hsl(var(--accent))]" />
+              <span>Total Articles</span>
+            </div>
+            <div class="text-sm font-mono font-semibold text-[hsl(var(--fg))]">
+              {formattedPosts.length} Published
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Blog Interactive Feed -->
+      <BlogFeed client:load posts={formattedPosts} />
+    </div>
+  </main>
+  <Footer client:visible />
+</Layout>
