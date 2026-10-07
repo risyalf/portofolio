@@ -457,7 +457,7 @@ function run() {
       category: 'Laravel',
       tags: ['Laravel', 'Architecture', 'Performance', 'PHP 8.3', 'Backend'],
       readTime: '6 min read',
-      content: `Artikel harian otomatis yang membahas praktik terbaik dalam pengembangan backend berskala tinggi dengan Laravel framework dan PHP 8.3+.`
+      content: `Catatan teknis yang membahas praktik terbaik dalam pengembangan backend berskala tinggi dengan Laravel framework dan PHP 8.3+.`
     };
   }
 

@@ -4,7 +4,7 @@ import Layout from '@/layouts/Layout.astro';
 import Footer from '@/components/Footer';
 import BlogFeed, { type BlogPostItem } from '@/components/blog/BlogFeed';
 import { getCollection } from 'astro:content';
-import { Terminal, Cpu, Clock, Rss } from 'lucide-react';
+import { Terminal, Cpu, UserCheck, BookOpen } from 'lucide-react';
 
 const allPosts = await getCollection('blog');
 
@@ -31,8 +31,12 @@ const formattedPosts: BlogPostItem[] = sortedPosts.map((post) => ({
 ---
 
 <Layout
-  title="Laravel Engineering Blog — Risyal Febrianto"
-  description="Deep dives into modern Laravel architecture, high-throughput queues, Reverb WebSockets, and database performance. Auto-generated every night at 21:00 WIB."
+  title="Blog Arsitektur Laravel & Rekayasa Backend — Risyal Febrianto"
+  description="Kumpulan artikel teknis, studi kasus optimasi arsitektur Laravel, antrean skala tinggi, database tuning, dan real-time systems oleh Risyal Febrianto."
+  breadcrumbs={[
+    { name: 'Home', item: '/' },
+    { name: 'Blog', item: '/blog' },
+  ]}
 >
   <main class="min-h-screen pt-28 pb-20 px-4">
     <div class="max-w-4xl mx-auto space-y-12">
@@ -49,7 +53,7 @@ const formattedPosts: BlogPostItem[] = sortedPosts.map((post) => ({
             Laravel Engineering Insights
           </h1>
           <p class="text-base sm:text-lg text-[hsl(var(--fg-muted))] max-w-2xl leading-relaxed">
-            Catatan arsitektur teknis, optimasi performa skala besar, sistem antrean, dan eksplorasi fitur terbaru ekosistem Laravel. Diperbarui secara otomatis setiap hari pukul 21:00 WIB.
+            Catatan arsitektur teknis, optimasi performa skala besar, sistem antrean, dan eksplorasi fitur terbaru ekosistem Laravel berdasarkan riset dan pengalaman langsung di lingkungan produksi.
           </p>
         </div>
 
@@ -58,7 +62,7 @@ const formattedPosts: BlogPostItem[] = sortedPosts.map((post) => ({
           <div class="card-base p-3.5 space-y-1">
             <div class="flex items-center gap-2 text-xs font-mono text-[hsl(var(--fg-muted))]">
               <Cpu className="w-3.5 h-3.5 text-[hsl(var(--accent))]" />
-              <span>Domain</span>
+              <span>Spesialisasi</span>
             </div>
             <div class="text-sm font-mono font-semibold text-[hsl(var(--fg))]">
               Laravel & PHP 8.3+
@@ -67,21 +71,21 @@ const formattedPosts: BlogPostItem[] = sortedPosts.map((post) => ({
 
           <div class="card-base p-3.5 space-y-1">
             <div class="flex items-center gap-2 text-xs font-mono text-[hsl(var(--fg-muted))]">
-              <Clock className="w-3.5 h-3.5 text-[hsl(var(--accent))]" />
-              <span>Cron Cadence</span>
+              <UserCheck className="w-3.5 h-3.5 text-[hsl(var(--accent))]" />
+              <span>Penulis</span>
             </div>
             <div class="text-sm font-mono font-semibold text-emerald-400">
-              21:00 WIB Daily
+              Risyal Febrianto
             </div>
           </div>
 
           <div class="card-base p-3.5 space-y-1 col-span-2 sm:col-span-1">
             <div class="flex items-center gap-2 text-xs font-mono text-[hsl(var(--fg-muted))]">
-              <Rss className="w-3.5 h-3.5 text-[hsl(var(--accent))]" />
-              <span>Total Articles</span>
+              <BookOpen className="w-3.5 h-3.5 text-[hsl(var(--accent))]" />
+              <span>Publikasi</span>
             </div>
             <div class="text-sm font-mono font-semibold text-[hsl(var(--fg))]">
-              {formattedPosts.length} Published
+              {formattedPosts.length} Studi Kasus
             </div>
           </div>
         </div>

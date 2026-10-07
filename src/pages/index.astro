@@ -10,7 +10,11 @@ import Footer from '@/components/Footer';
 import { config } from '../data/config';
 ---
 
-<Layout title={config.siteTitle} description={config.description}>
+<Layout
+  title={config.siteTitle}
+  description={config.description}
+  breadcrumbs={[{ name: 'Home', item: '/' }]}
+>
   <main class="min-h-screen pt-12">
     <Hero client:load />
     <About client:visible />

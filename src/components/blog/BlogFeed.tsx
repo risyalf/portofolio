@@ -96,8 +96,8 @@ export default function BlogFeed({ posts }: BlogFeedProps) {
           <span>Showing {filteredPosts.length} of {posts.length} articles</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-          <span>Cron: 21:00 WIB Daily</span>
+          <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span>Ditulis oleh Risyal Febrianto</span>
         </div>
       </div>
 
