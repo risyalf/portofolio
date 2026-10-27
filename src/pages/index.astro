@@ -16,11 +16,11 @@ import { config } from '../data/config';
   breadcrumbs={[{ name: 'Home', item: '/' }]}
 >
   <main class="min-h-screen">
-    <Hero client:load />
-    <About client:visible />
-    <Experience client:visible />
+    <Hero />
+    <About />
+    <Experience />
     <PortfolioFeed client:visible />
     <BlogSection />
-    <Footer client:visible />
+    <Footer />
   </main>
 </Layout>
