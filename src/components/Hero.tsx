@@ -6,7 +6,11 @@ const Hero: React.FC = () => {
   return (
     <section className="relative pt-24 pb-20 md:pt-32 md:pb-28 overflow-hidden" aria-label="Introduction">
       {/* Background radial gradient decoration */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-[hsl(var(--accent)/0.08)] blur-[120px] rounded-full pointer-events-none -z-10" />
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[min(600px,100vw)] h-[350px] bg-[hsl(var(--accent)/0.08)] blur-[120px] rounded-full pointer-events-none -z-10"
+        aria-hidden="true"
+        style={{ contain: 'strict' }}
+      />
 
       <div className="container-wide">
         <div className="max-w-4xl mx-auto text-center space-y-8">

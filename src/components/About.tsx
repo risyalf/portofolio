@@ -56,15 +56,18 @@ const About: React.FC = () => {
           {/* Left Column: Photo & Key Facts */}
           <div className="lg:col-span-5 space-y-6">
             <div className="relative rounded-2xl overflow-hidden border border-[hsl(var(--border))] bg-[hsl(var(--bg-elevated))] shadow-md">
-              <img
-                src={heroData.profilePicture}
-                alt="Risyal Febrianto"
-                className="w-full aspect-[4/3] sm:aspect-square object-cover object-top hover:scale-[1.02] transition-transform duration-300"
-                width={500}
-                height={500}
-                loading="lazy"
-                decoding="async"
-              />
+              <picture>
+                <source type="image/webp" srcSet="/risyal-400.webp 400w, /risyal.webp 600w" sizes="(max-width: 640px) 400px, 600px" />
+                <img
+                  src="/risyal.webp"
+                  alt="Risyal Febrianto"
+                  className="w-full aspect-[4/3] sm:aspect-square object-cover object-top hover:scale-[1.02] transition-transform duration-300"
+                  width={500}
+                  height={500}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
               <div className="p-5 space-y-3 border-t border-[hsl(var(--border))] bg-[hsl(var(--bg-elevated))]">
                 <div className="flex items-center justify-between text-sm">
                   <span className="font-display font-bold text-[hsl(var(--fg))]">{heroData.name}</span>
