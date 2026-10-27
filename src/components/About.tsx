@@ -62,6 +62,8 @@ const About: React.FC = () => {
                 className="w-full aspect-[4/3] sm:aspect-square object-cover object-top hover:scale-[1.02] transition-transform duration-300"
                 width={500}
                 height={500}
+                loading="lazy"
+                decoding="async"
               />
               <div className="p-5 space-y-3 border-t border-[hsl(var(--border))] bg-[hsl(var(--bg-elevated))]">
                 <div className="flex items-center justify-between text-sm">
