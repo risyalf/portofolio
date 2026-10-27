@@ -1,119 +1,162 @@
 import React from 'react';
+import { Database, Server, Layout, Cpu, CheckCircle2, MapPin, Globe, Sparkles } from 'lucide-react';
 import { heroData } from '@/data/heroData';
-import { cn } from '@/lib/utils';
 
-const About = () => {
-  const skills = heroData.skills;
+const About: React.FC = () => {
+  const skillGroups = [
+    {
+      category: 'Backend & Systems',
+      icon: Server,
+      skills: ['PHP 8.3', 'Laravel 11', 'Node.js', 'RESTful APIs', 'Redis & Queues', 'Microservices'],
+    },
+    {
+      category: 'Database & Performance',
+      icon: Database,
+      skills: ['PostgreSQL', 'MySQL', 'Query Optimization', 'Index Tuning', 'Data Modeling', 'Transactions'],
+    },
+    {
+      category: 'Frontend & UI',
+      icon: Layout,
+      skills: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Bootstrap', 'Responsive Design'],
+    },
+    {
+      category: 'Architecture & DevOps',
+      icon: Cpu,
+      skills: ['Clean Architecture', 'SOLID Principles', 'Docker', 'Git & CI/CD', 'iDempiere ERP', 'Unity / C#'],
+    },
+  ];
 
-  // Group skills by category for better presentation
-  const skillCategories = [
-    { category: 'Backend', skills: ['PHP', 'Laravel', 'Node.js', 'API Development'] },
-    { category: 'Frontend', skills: ['JavaScript', 'React', 'TypeScript', 'Tailwind CSS', 'Bootstrap'] },
-    { category: 'Database', skills: ['PostgreSQL', 'MySQL'] },
+  const highlights = [
+    '4+ years solving enterprise operational bottlenecks across WMS, ERP, and SaaS platforms',
+    'Deep expertise in Laravel query tuning, asynchronous background jobs, and API integrations',
+    'Proven track record delivering 30+ production systems on-schedule and defect-free',
+    'Comfortable operating as a solo lead developer or collaborating in cross-functional sprint teams',
   ];
 
   return (
-    <section id="about" className="section-gap" aria-labelledby="about-heading">
+    <section id="about" className="section-gap bg-[hsl(var(--bg-elevated))]/40 border-y border-[hsl(var(--border))]" aria-labelledby="about-heading">
       <div className="container-wide">
-        <header className="mb-12 max-w-2xl">
-          <h2 id="about-heading" className="text-heading text-heading-xl">
-            About
+
+        {/* Section Header */}
+        <div className="max-w-2xl mb-14">
+          <div className="tag-pill mb-3">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Profile & Background</span>
+          </div>
+          <h2 id="about-heading" className="text-display text-2xl sm:text-4xl text-[hsl(var(--fg))]">
+            Bridging Business Demands with Resilient Engineering
           </h2>
-        </header>
+          <p className="text-body text-[hsl(var(--fg-muted))] mt-3 text-base sm:text-lg">
+            Dedicated software engineer passionate about clean code, scalable architecture, and measurable performance improvements.
+          </p>
+        </div>
 
-        <div className="grid lg:grid-cols-[180px_1fr] gap-10 lg:gap-16 items-start">
-          {/* Photo Column */}
-          <aside className="lg:sticky lg:top-24 shrink-0">
-            <figure className="relative">
-              <div className="relative aspect-square max-w-xs mx-auto lg:mx-0">
-                {/* Outer accent border */}
-                <div className="absolute inset-0 rounded-full border-2 border-[hsl(var(--accent))] opacity-50" aria-hidden="true" />
-                {/* Inner border */}
-                <div className="absolute inset-1 rounded-full border border-[hsl(var(--border))]" aria-hidden="true" />
-                {/* Image */}
-                <img
-                  src={heroData.profilePicture}
-                  alt="Risyal Febrianto"
-                  className="relative rounded-full w-full h-full object-cover border border-[hsl(var(--bg))]"
-                  width={320}
-                  height={320}
-                />
-                {/* Subtle accent accent dot */}
-                <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-[hsl(var(--accent))] border-4 border-[hsl(var(--bg))]" aria-hidden="true" />
-              </div>
-              <figcaption className="text-center mt-4 text-small text-[hsl(var(--fg-muted))]">
-                Full-Stack Developer
-              </figcaption>
-            </figure>
-          </aside>
+        <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-start">
 
-          {/* Content Column */}
-          <div className="space-y-10">
-            {/* Narrative */}
-            <div className="prose prose-invert max-w-none" style={{ '--tw-prose-body': 'hsl(var(--fg-muted))', '--tw-prose-headings': 'hsl(var(--fg))' }}>
-              <p className="text-body-lg text-[hsl(var(--fg))] mb-6">
-                I build scalable web applications and transform raw data into meaningful insights that drive business success.
-              </p>
-              <p className="text-body text-[hsl(var(--fg-muted))] mb-6">
-                With a strong foundation in both backend and frontend development, I specialize in the Laravel and React ecosystems. I enjoy solving complex architectural challenges, optimizing database performance, and crafting clean, maintainable code that stands the test of time.
-              </p>
-              <p className="text-body text-[hsl(var(--fg-muted))]">
-                Currently focused on building robust enterprise systems and exploring the intersection of developer experience and application performance.
-              </p>
-            </div>
+          {/* Left Column: Photo & Key Facts */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="relative rounded-2xl overflow-hidden border border-[hsl(var(--border))] bg-[hsl(var(--bg-elevated))] shadow-md">
+              <img
+                src={heroData.profilePicture}
+                alt="Risyal Febrianto"
+                className="w-full aspect-[4/3] sm:aspect-square object-cover object-top hover:scale-[1.02] transition-transform duration-300"
+                width={500}
+                height={500}
+              />
+              <div className="p-5 space-y-3 border-t border-[hsl(var(--border))] bg-[hsl(var(--bg-elevated))]">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="font-display font-bold text-[hsl(var(--fg))]">{heroData.name}</span>
+                  <span className="text-xs px-2.5 py-0.5 rounded-full bg-[hsl(var(--accent))/0.15] text-[hsl(var(--accent))] font-medium">
+                    Backend & Full-Stack
+                  </span>
+                </div>
 
-            {/* Skills as "installed packages" */}
-            <div>
-              <h3 className="text-heading text-lg text-[hsl(var(--fg-muted))] mb-6 flex items-center gap-3">
-                <span className="text-mono-xs text-[hsl(var(--accent))]">$</span>
-                <span className="text-mono-xs">npm list --depth=0</span>
-              </h3>
-              <div className="space-y-6">
-                {skillCategories.map((group, groupIndex) => (
-                  <div key={group.category} className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-[hsl(var(--fg-subtle))] text-mono uppercase tracking-wider">
-                        {group.category}
-                      </span>
-                      <div className="h-px flex-1 bg-[hsl(var(--border))]" aria-hidden="true" />
-                    </div>
-                    <div className="flex flex-wrap gap-2 ml-6" role="list" aria-label={`${group.category} skills`}>
-                      {group.skills.map((skill, skillIndex) => (
-                        <span
-                          key={`${group.category}-${skill}`}
-                          className="tag-mono"
-                          role="listitem"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
+                <div className="grid grid-cols-2 gap-2 pt-2 text-xs text-[hsl(var(--fg-muted))]">
+                  <div className="flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-[hsl(var(--accent))]" />
+                    <span>Indonesia (WIB / GMT+7)</span>
                   </div>
-                ))}
+                  <div className="flex items-center gap-1.5">
+                    <Globe className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Remote Ready</span>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Quick stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-[hsl(var(--border))]">
-              <div className="text-center">
-                <div className="text-display text-2xl text-[hsl(var(--accent))] font-mono">5+</div>
-                <div className="text-xs text-[hsl(var(--fg-muted))] mt-1">Years Experience</div>
-              </div>
-              <div className="text-center">
-                <div className="text-display text-2xl text-[hsl(var(--accent))] font-mono">30+</div>
-                <div className="text-xs text-[hsl(var(--fg-muted))] mt-1">Projects Delivered</div>
-              </div>
-              <div className="text-center">
-                <div className="text-display text-2xl text-[hsl(var(--accent))] font-mono">10+</div>
-                <div className="text-xs text-[hsl(var(--fg-muted))] mt-1">Tech Stack</div>
-              </div>
-              <div className="text-center">
-                <div className="text-display text-2xl text-[hsl(var(--accent))] font-mono">100%</div>
-                <div className="text-xs text-[hsl(var(--fg-muted))] mt-1">Remote Ready</div>
-              </div>
+            {/* Value Proposition Highlights */}
+            <div className="card-base p-6 space-y-3.5">
+              <h3 className="font-display font-semibold text-sm text-[hsl(var(--fg))] flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <span>Why Recruiters & Clients Rely on Me:</span>
+              </h3>
+              <ul className="space-y-2.5 text-xs sm:text-sm text-[hsl(var(--fg-muted))]">
+                {highlights.map((item, idx) => (
+                  <li key={idx} className="flex items-start gap-2.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--accent))] mt-2 shrink-0" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
+
+          {/* Right Column: Narrative & Technical Capabilities */}
+          <div className="lg:col-span-7 space-y-8">
+
+            {/* Bio Narrative */}
+            <div className="space-y-4 text-body text-[hsl(var(--fg-muted))] text-sm sm:text-base leading-relaxed">
+              <p>
+                Over the past 4+ years, I have engineered systems ranging from enterprise <strong className="text-[hsl(var(--fg))] font-semibold">Warehouse Management Systems (WMS)</strong> and apparel manufacturing ERP platforms to high-conversion SaaS web applications. My core strength lies in unraveling complex business workflows and translating them into robust, maintainable backend services.
+              </p>
+              <p>
+                In the <strong className="text-[hsl(var(--fg))] font-semibold">Laravel & PHP ecosystem</strong>, I prioritize clean architectural patterns (Domain-driven boundaries, Service-Repository, pipeline designs) alongside rigorous query optimization in PostgreSQL and MySQL. I prevent performance bottlenecks before they reach production.
+              </p>
+              <p>
+                On the frontend, I utilize <strong className="text-[hsl(var(--fg))] font-semibold">React, TypeScript, and Tailwind CSS</strong> to build responsive, intuitive user interfaces that allow operators and business users to perform their daily tasks effortlessly.
+              </p>
+            </div>
+
+            {/* Categorized Skills */}
+            <div className="space-y-4 pt-2">
+              <h3 className="font-display font-bold text-lg text-[hsl(var(--fg))]">
+                Technical Stack & Core Competencies
+              </h3>
+
+              <div className="grid sm:grid-cols-2 gap-4">
+                {skillGroups.map((group) => {
+                  const Icon = group.icon;
+                  return (
+                    <div
+                      key={group.category}
+                      className="card-base p-5 space-y-3"
+                    >
+                      <div className="flex items-center gap-2.5 text-sm font-display font-semibold text-[hsl(var(--fg))]">
+                        <div className="p-1.5 rounded-lg bg-[hsl(var(--accent))/0.1] text-[hsl(var(--accent))]">
+                          <Icon className="w-4 h-4" />
+                        </div>
+                        <span>{group.category}</span>
+                      </div>
+
+                      <div className="flex flex-wrap gap-1.5">
+                        {group.skills.map((skill) => (
+                          <span
+                            key={skill}
+                            className="px-2.5 py-1 text-xs rounded-md bg-[hsl(var(--bg))] border border-[hsl(var(--border))] text-[hsl(var(--fg-muted))] hover:text-[hsl(var(--fg))] hover:border-[hsl(var(--accent)/0.4)] transition-colors"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+          </div>
         </div>
+
       </div>
     </section>
   );

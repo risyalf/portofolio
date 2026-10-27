@@ -2,37 +2,39 @@
 import '@/styles/globals.css';
 import Layout from '@/layouts/Layout.astro';
 import Footer from '@/components/Footer';
-import BlogFeed, { type BlogPostItem } from '@/components/blog/BlogFeed';
-import { getCollection } from 'astro:content';
-import { Terminal, Cpu, UserCheck, BookOpen } from 'lucide-react';
+import { BookOpen, Sparkles, Clock, Mail, Wrench, ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
 
-const allPosts = await getCollection('blog');
-
-// Sort by pubDate descending
-const sortedPosts = allPosts.sort(
-  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
-);
-
-const formattedPosts: BlogPostItem[] = sortedPosts.map((post) => ({
-  slug: post.slug,
-  title: post.data.title,
-  description: post.data.description,
-  pubDate: post.data.pubDate.toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  }),
-  category: post.data.category,
-  tags: post.data.tags,
-  readTime: post.data.readTime,
-  author: post.data.author,
-  featured: post.data.featured,
-}));
+const upcomingArticles = [
+  {
+    title: "High-Volume Inventory Sync: Managing Redis Horizon Queues in Enterprise WMS",
+    summary: "Real-world strategies for processing thousands of asynchronous stock transactions with idempotency, exponential backoff, and zero event loss.",
+    tags: ["Laravel 11", "Redis Horizon", "WMS", "Queues"],
+    status: "Drafting",
+    progress: "75%",
+    statusColor: "text-amber-400 bg-amber-400/10 border-amber-400/20",
+  },
+  {
+    title: "PostgreSQL Query Optimization: Eliminating Deadlocks in High-Concurrency Systems",
+    summary: "Case study on diagnosing query lock contention, analyzing EXPLAIN ANALYZE traces, and restructuring relational indexes in production.",
+    tags: ["PostgreSQL", "Database Tuning", "SQL", "High Concurrency"],
+    status: "Reviewing",
+    progress: "90%",
+    statusColor: "text-emerald-400 bg-emerald-400/10 border-emerald-400/20",
+  },
+  {
+    title: "Architecting Clean Service-Repository Boundaries in Modern Laravel 11",
+    summary: "Decoupling business logic from framework layers without over-engineering. Practical patterns for testable, maintainable enterprise backends.",
+    tags: ["Architecture", "PHP 8.3", "Clean Code", "Design Patterns"],
+    status: "In Outline",
+    progress: "40%",
+    statusColor: "text-[hsl(var(--accent))] bg-[hsl(var(--accent))/0.1] border-[hsl(var(--accent))/0.25]",
+  },
+];
 ---
 
 <Layout
-  title="Blog Arsitektur Laravel & Rekayasa Backend — Risyal Febrianto"
-  description="Kumpulan artikel teknis, studi kasus optimasi arsitektur Laravel, antrean skala tinggi, database tuning, dan real-time systems oleh Risyal Febrianto."
+  title="Laravel & PHP Engineering Lab — Risyal Febrianto"
+  description="Catatan arsitektur teknis dan deep dive rekayasa sistem Laravel, PHP 8.3, dan optimasi PostgreSQL oleh Risyal Febrianto."
   breadcrumbs={[
     { name: 'Home', item: '/' },
     { name: 'Blog', item: '/blog' },
@@ -40,59 +42,121 @@ const formattedPosts: BlogPostItem[] = sortedPosts.map((post) => ({
 >
   <main class="min-h-screen pt-28 pb-20 px-4">
     <div class="max-w-4xl mx-auto space-y-12">
-      <!-- Blog Hero / Header -->
-      <header class="space-y-6">
-        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[hsl(var(--bg-elevated))] border border-[hsl(var(--border))] text-xs font-mono text-[hsl(var(--accent))]">
-          <Terminal className="w-3.5 h-3.5" />
-          <span>~/blog/laravel</span>
-          <span class="w-1.5 h-1.5 rounded-full bg-[hsl(var(--accent))] animate-pulse"></span>
+      
+      <!-- Top Navigation back to Home -->
+      <nav class="flex items-center justify-between text-xs font-mono text-[hsl(var(--fg-muted))] border-b border-[hsl(var(--border))] pb-4">
+        <a href="/" class="inline-flex items-center gap-1.5 hover:text-[hsl(var(--accent))] transition-colors">
+          <ArrowLeft class="w-3.5 h-3.5" />
+          <span>Back to Portfolio</span>
+        </a>
+        <span class="text-xs px-2.5 py-0.5 rounded-full bg-[hsl(var(--bg-elevated))] border border-[hsl(var(--border))] text-amber-400 font-medium">
+          Editorial Status: In Lab
+        </span>
+      </nav>
+
+      <!-- Page Header -->
+      <header class="space-y-4">
+        <div class="tag-pill">
+          <BookOpen class="w-3.5 h-3.5" />
+          <span>Technical Notes & Case Studies</span>
         </div>
 
-        <div class="space-y-3">
-          <h1 class="text-3xl sm:text-4xl md:text-5xl font-mono font-bold tracking-tight text-[hsl(var(--fg))]">
-            Laravel Engineering Insights
-          </h1>
-          <p class="text-base sm:text-lg text-[hsl(var(--fg-muted))] max-w-2xl leading-relaxed">
-            Catatan arsitektur teknis, optimasi performa skala besar, sistem antrean, dan eksplorasi fitur terbaru ekosistem Laravel berdasarkan riset dan pengalaman langsung di lingkungan produksi.
+        <h1 class="text-display text-3xl sm:text-4xl md:text-5xl text-[hsl(var(--fg))]">
+          Laravel & PHP Engineering Lab
+        </h1>
+
+        <p class="text-body text-base sm:text-lg text-[hsl(var(--fg-muted))] max-w-2xl leading-relaxed">
+          I document battle-tested architecture patterns, query performance tuning, and scalable backend workflows based on real-world Warehouse Management Systems (WMS) and ERP platform challenges.
+        </p>
+      </header>
+
+      <!-- Creative Notice Card -->
+      <div class="card-base p-6 sm:p-8 bg-[hsl(var(--bg-elevated))] border border-[hsl(var(--border))] space-y-4">
+        <div class="flex items-center gap-2.5 text-emerald-400 text-sm font-semibold">
+          <Sparkles class="w-4 h-4" />
+          <span>Quality Over Quantity Principle</span>
+        </div>
+        <p class="text-body text-xs sm:text-sm text-[hsl(var(--fg-muted))] leading-relaxed">
+          Rather than publishing generic tutorials or AI-generated filler, every article in this publication is written directly from production telemetry, profiling benchmarks, and code that runs at enterprise scale. New technical case studies are currently being curated and peer-reviewed.
+        </p>
+      </div>
+
+      <!-- Upcoming Articles Pipeline -->
+      <div class="space-y-6">
+        <div class="flex items-center justify-between">
+          <h2 class="font-display font-bold text-xl text-[hsl(var(--fg))]">
+            Articles in Preparation Pipeline
+          </h2>
+          <span class="text-xs font-mono text-[hsl(var(--fg-muted))]">
+            {upcomingArticles.length} Deep Dives Drafting
+          </span>
+        </div>
+
+        <div class="grid gap-6">
+          {upcomingArticles.map((article) => (
+            <article class="card-base p-6 sm:p-7 flex flex-col justify-between hover:border-[hsl(var(--accent)/0.5)] transition-all">
+              <div class="space-y-3">
+                <div class="flex items-center justify-between text-xs font-mono">
+                  <span class={`px-2.5 py-0.5 rounded-full border font-semibold ${article.statusColor}`}>
+                    {article.status}
+                  </span>
+                  <span class="text-[hsl(var(--fg-muted))] flex items-center gap-1">
+                    <Clock class="w-3 h-3 text-[hsl(var(--accent))]" />
+                    <span>{article.progress} Written</span>
+                  </span>
+                </div>
+
+                <h3 class="font-display font-bold text-lg sm:text-xl text-[hsl(var(--fg))] leading-snug">
+                  {article.title}
+                </h3>
+
+                <p class="text-body text-xs sm:text-sm text-[hsl(var(--fg-muted))] leading-relaxed">
+                  {article.summary}
+                </p>
+
+                <div class="flex flex-wrap gap-1.5 pt-2">
+                  {article.tags.map((tag) => (
+                    <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-[hsl(var(--bg))] text-[hsl(var(--fg-muted))] border border-[hsl(var(--border))]">
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div class="pt-4 mt-5 border-t border-[hsl(var(--border))] flex items-center justify-between text-xs font-mono text-[hsl(var(--fg-muted))]">
+                <span class="flex items-center gap-1.5">
+                  <Wrench class="w-3.5 h-3.5 text-amber-400" />
+                  <span>Scheduled for Production Release</span>
+                </span>
+                <span class="text-[hsl(var(--accent))]">
+                  Preview in drafting ↗
+                </span>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <!-- Action Banner -->
+      <div class="p-6 sm:p-8 rounded-2xl bg-[hsl(var(--bg-elevated))] border border-[hsl(var(--border))] flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div class="space-y-1 text-center sm:text-left">
+          <h3 class="font-display font-bold text-base text-[hsl(var(--fg))]">
+            Looking for technical discussion or architecture advice?
+          </h3>
+          <p class="text-xs text-[hsl(var(--fg-muted))]">
+            Feel free to connect or suggest a specific Laravel backend topic.
           </p>
         </div>
 
-        <!-- Telemetry / Stats Cards -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
-          <div class="card-base p-3.5 space-y-1">
-            <div class="flex items-center gap-2 text-xs font-mono text-[hsl(var(--fg-muted))]">
-              <Cpu className="w-3.5 h-3.5 text-[hsl(var(--accent))]" />
-              <span>Spesialisasi</span>
-            </div>
-            <div class="text-sm font-mono font-semibold text-[hsl(var(--fg))]">
-              Laravel & PHP 8.3+
-            </div>
-          </div>
+        <a
+          href="mailto:risyalfebrianto97@gmail.com?subject=Laravel%20Tech%20Discussion"
+          class="btn-primary text-xs sm:text-sm whitespace-nowrap shrink-0"
+        >
+          <Mail class="w-4 h-4 mr-2" />
+          <span>Get in Touch</span>
+        </a>
+      </div>
 
-          <div class="card-base p-3.5 space-y-1">
-            <div class="flex items-center gap-2 text-xs font-mono text-[hsl(var(--fg-muted))]">
-              <UserCheck className="w-3.5 h-3.5 text-[hsl(var(--accent))]" />
-              <span>Penulis</span>
-            </div>
-            <div class="text-sm font-mono font-semibold text-emerald-400">
-              Risyal Febrianto
-            </div>
-          </div>
-
-          <div class="card-base p-3.5 space-y-1 col-span-2 sm:col-span-1">
-            <div class="flex items-center gap-2 text-xs font-mono text-[hsl(var(--fg-muted))]">
-              <BookOpen className="w-3.5 h-3.5 text-[hsl(var(--accent))]" />
-              <span>Publikasi</span>
-            </div>
-            <div class="text-sm font-mono font-semibold text-[hsl(var(--fg))]">
-              {formattedPosts.length} Studi Kasus
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <!-- Blog Interactive Feed -->
-      <BlogFeed client:load posts={formattedPosts} />
     </div>
   </main>
   <Footer client:visible />
