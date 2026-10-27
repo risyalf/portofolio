@@ -15,425 +15,410 @@ if (!fs.existsSync(blogDir)) {
   fs.mkdirSync(blogDir, { recursive: true });
 }
 
-// Pool of advanced Laravel engineering topics
+// Pool of advanced Laravel, PHP, and PostgreSQL engineering topics
 const topicCatalog = [
   {
-    slug: 'laravel-octane-frankenphp-performance',
-    title: 'Laravel Octane + FrankenPHP: Eksekusi Ribuan Request per Detik Tanpa Overhead PHP-FPM',
-    description: 'Panduan lengkap akselerasi performa backend Laravel menggunakan Laravel Octane bertenaga FrankenPHP dan worker persistensi di memori RAM.',
-    category: 'Laravel',
-    tags: ['Laravel Octane', 'FrankenPHP', 'Performance', 'Docker', 'DevOps'],
-    readTime: '8 min read',
-    content: `Tradisi lama siklus hidup PHP klasik adalah **share-nothing architecture**: setiap kali ada HTTP request masuk, PHP-FPM akan mem-boot framework dari nol, membaca konfigurasi, menginisialisasi service providers, mengeksekusi router, lalu membuang semua alokasi memori setelah response dikirim.
-
-Dengan **Laravel Octane** dan runtime modern seperti **FrankenPHP** (atau Swoole/RoadRunner), aplikasi Laravel Anda hanya di-boot sekali di dalam RAM dan tetap hidup (*daemon mode*). Hasilnya adalah latensi di bawah 5 milidetik dan throughput meningkat hingga 5-10 kali lipat.
-
----
-
-## 1. Mengapa FrankenPHP Menjadi Pilihan Utama?
-
-FrankenPHP adalah application server modern berbasis Caddy web server yang ditulis dalam Go. Keunggulannya meliputi:
-- **Automatic HTTPS** (sertifikat Let's Encrypt terintegrasi otomatis).
-- **HTTP/3 Support** secara out-of-the-box.
-- **Early Hints (103)** untuk mempercepat loading aset browser.
-- **Integrasi native worker** tanpa membutuhkan ekstensi C yang rumit seperti Swoole.
-
-Instalasi pada proyek Laravel:
-
-\`\`\`bash
-composer require laravel/octane
-php artisan octane:install --server=frankenphp
-\`\`\`
-
----
-
-## 2. Menjalankan Octane Server
-
-Di lingkungan development:
-
-\`\`\`bash
-php artisan octane:start --watch
-\`\`\`
-
-Flag \`--watch\` akan memantau perubahan file dan me-reload worker otomatis saat kode diperbarui.
-
----
-
-## 3. Hati-hati dengan Memory Leaks & Static State!
-
-Karena framework tidak lagi di-reboot antar HTTP request, Anda harus waspada terhadap persistensi data di service container:
-
-### Aturan Emas Octane:
-1. **Hindari menyimpan state request-specific di singleton**.
-2. **Jangan mengikat Request instance ke property static**.
-3. Gunakan callback resolver daripada static assignment.
-
-Contoh penanganan yang benar:
-
-\`\`\`php
-namespace App\\Services;
-
-use App\\Models\\User;
-
-class CartManager
-{
-    // HINDARI: public ?User $currentUser = null;
-    
-    // GUNAKAN: Ambil user secara dinamis per operasi
-    public function getActiveCart(int $userId)
-    {
-        return Cache::remember("cart:{$userId}", 300, function () use ($userId) {
-            return Cart::where('user_id', $userId)->first();
-        });
-    }
-}
-\`\`\`
-
----
-
-## 4. Konfigurasi Deployment Docker di Production
-
-Contoh Dockerfile ringkas berbasis image resmi FrankenPHP:
-
-\`\`\`dockerfile
-FROM dunglas/frankenphp:latest-php8.3
-
-ENV SERVER_NAME=":80"
-WORKDIR /app
-
-COPY . /app
-RUN composer install --no-dev --optimize-autoloader
-RUN php artisan config:cache && php artisan route:cache
-
-CMD ["php", "artisan", "octane:start", "--server=frankenphp", "--host=0.0.0.0", "--port=80"]
-\`\`\`
-
----
-
-## Kesimpulan
-
-Laravel Octane dengan FrankenPHP membawa kapabilitas PHP setara dengan runtime Go atau Node.js dalam kecepatan eksekusi, sembari tetap mempertahankan kemudahan ekosistem Laravel yang ekspresif.
-`
-  },
-  {
-    slug: 'laravel-pulse-realtime-monitoring',
-    title: 'Laravel Pulse: Observability & Monitoring Performa Tanpa Tool Pihak Ketiga',
-    description: 'Memantau pemakaian CPU, memori, slow queries, slow requests, dan status queue worker secara real-time langsung dari ekosistem first-party Laravel Pulse.',
-    category: 'Laravel',
-    tags: ['Laravel Pulse', 'Monitoring', 'Observability', 'Performance', 'Redis'],
-    readTime: '7 min read',
-    content: `Observability seringkali membutuhkan biaya berlangganan mahal ke platform seperti Datadog atau New Relic. **Laravel Pulse** hadir sebagai tool pemantauan performa aplikasi gratis dan open-source yang dirancang khusus untuk ekosistem Laravel.
-
-Dengan Pulse, Anda dapat langsung mengidentifikasi query database yang lambat, job queue yang memakan waktu lama, serta endpoint API yang mengalami lonjakan latency.
-
----
-
-## 1. Memasang Laravel Pulse
-
-\`\`\`bash
-composer require laravel/pulse
-php artisan pulse:install
-php artisan migrate
-\`\`\`
-
-Pulse menggunakan recorder background yang sangat ringan, menyimpan snapshot metrik ke dalam database atau Redis, dan merendernya dalam antarmuka web yang intuitif di \`/pulse\`.
-
----
-
-## 2. Mengamankan Akses Dasbor
-
-Secara default, Pulse hanya dapat diakses di environment local. Untuk membuka akses di production kepada tim admin:
-
-\`\`\`php
-// app/Providers/AppServiceProvider.php
-use App\\Models\\User;
-use Illuminate\\Support\\Facades\\Gate;
-
-public function boot(): void
-{
-    Gate::define('viewPulse', function (User $user) {
-        return in_array($user->email, [
-            'admin@perusahaan.com',
-            'lead-dev@perusahaan.com',
-        ]);
-    });
-}
-\`\`\`
-
----
-
-## 3. Fitur Utama yang Mengubah Alur Kerja Debugging
-
-### A. Slow Queries Detection
-Pulse secara otomatis menandai query SQL yang dieksekusi lebih dari 500ms, lengkap dengan call trace file dan baris kode pemanggilnya.
-
-### B. Slow Jobs Tracker
-Anda dapat melihat pekerjaan latar belakang apa saja yang mengalami backlog atau durasi eksekusi tinggi.
-
-### C. Server Resource Gauge
-Menampilkan persentase penggunaan memori RAM dan CPU secara live pada cluster server Anda.
-
----
-
-## Kesimpulan
-
-Laravel Pulse memberikan visibilitas langsung ke jantung aplikasi Anda tanpa setup infrastruktur monitoring yang rumit. Wajib diaktifkan di setiap aplikasi produksi!
-`
-  },
-  {
-    slug: 'laravel-pennant-feature-flags',
-    title: 'Laravel Pennant: Manajemen Feature Flags & Trunk-Based Development',
-    description: 'Implementasikan continuous deployment dengan aman menggunakan feature flags di Laravel. Rilis fitur secara inkremental ke sebagian pengguna terpilih.',
-    category: 'Laravel',
-    tags: ['Laravel Pennant', 'Feature Flags', 'CI/CD', 'Architecture', 'Clean Code'],
-    readTime: '6 min read',
-    content: `Dalam tim engineering modern, melakukan merge ke branch main tanpa merilis fitur ke publik adalah kunci dari **Trunk-Based Development**. **Laravel Pennant** menyediakan solusi first-party yang elegan untuk mengelola feature flags dan A/B testing.
-
----
-
-## 1. Setup Laravel Pennant
-
-\`\`\`bash
-composer require laravel/pennant
-php artisan vendor:publish --provider="Laravel\\Pennant\\PennantServiceProvider"
-php artisan migrate
-\`\`\`
-
----
-
-## 2. Mendefinisikan Feature Flag
-
-Anda dapat mendefinisikan flag di \`AppServiceProvider\` atau dedicated \`FeatureServiceProvider\`:
-
-\`\`\`php
-namespace App\\Providers;
-
-use App\\Models\\User;
-use Illuminate\\Support\\ServiceProvider;
-use Laravel\\Pennant\\Feature;
-
-class AppServiceProvider extends ServiceProvider
-{
-    public function boot(): void
-    {
-        // Fitur checkout baru hanya aktif untuk 20% user secara acak (gradual rollout)
-        Feature::define('new-checkout-v2', function (User $user) {
-            return $user->id % 5 === 0;
-        });
-
-        // Fitur beta hanya untuk user dengan paket enterprise
-        Feature::define('ai-assistant', function (User $user) {
-            return $user->subscription_tier === 'enterprise';
-        });
-    }
-}
-\`\`\`
-
----
-
-## 3. Mengecek Feature di Controller & Blade
-
-### Di Controller:
-\`\`\`php
-use Laravel\\Pennant\\Feature;
-
-public function checkout(Request $request)
-{
-    if (Feature::active('new-checkout-v2')) {
-        return view('checkout.v2');
-    }
-
-    return view('checkout.legacy');
-}
-\`\`\`
-
-### Di Blade View:
-\`\`\`blade
-@feature('ai-assistant')
-    <button class="btn-ai-assist">Tanya AI Assistant</button>
-@else
-    <button class="btn-standard">Bantuan Standar</button>
-@endfeature
-\`\`\`
-
----
-
-## Kesimpulan
-
-Feature flags memisahkan antara proses deployment kode dan aktivasi fitur bisnis. Ini meminimalkan risiko bug kritis dan mempercepat siklus delivery software Anda.
-`
-  },
-  {
-    slug: 'laravel-pipeline-pattern-clean-code',
-    title: 'Laravel Pipeline Pattern: Menyusun Alur Bisnis Kompleks dengan Clean Architecture',
-    description: 'Gunakan Illuminate Pipeline untuk mengisolasi tahapan filter, validasi transaksi e-commerce, dan proses multistep menjadi class-class kecil yang mudah diuji.',
-    category: 'Laravel',
-    tags: ['Laravel', 'Design Patterns', 'Pipeline', 'Refactoring', 'Clean Code'],
-    readTime: '8 min read',
-    content: `Pernahkah Anda menemukan Controller atau Action class yang memiliki panjang lebih dari 400 baris, penuh dengan \`if-else\` bertingkat untuk menghitung diskon pesanan, ongkos kirim, pajak, dan voucher?
-
-**Laravel Pipeline Pattern** (komponen internal yang sama yang mendasari Middleware Laravel) adalah solusi arsitektural terbaik untuk memecah proses tersebut.
-
----
-
-## 1. Konsep Pipeline
-
-Sebuah input data (disebut *passable*) dilewatkan secara berurutan melalui serangkaian pipa (*pipes*). Setiap pipa melakukan satu tugas spesifik dan meneruskannya ke pipa berikutnya:
-
-\`\`\`
-Order Data -> [Cek Stok] -> [Hitung Diskon] -> [Terapkan Pajak] -> [Validasi Ongkir] -> Hasil Akhir
-\`\`\`
-
----
-
-## 2. Membuat Pipe Classes
-
-Setiap pipe class hanya butuh mengimplementasikan satu method \`handle($order, Closure $next)\`:
-
-\`\`\`php
-namespace App\\Pipelines\\Order;
-
-use Closure;
-use App\\DTOs\\OrderCalculation;
-
-class ApplyCouponDiscount
-{
-    public function handle(OrderCalculation $order, Closure $next)
-    {
-        if ($order->couponCode) {
-            $discount = CouponService::calculate($order->couponCode, $order->subtotal);
-            $order->discountAmount += $discount;
-        }
-
-        return $next($order);
-    }
-}
-\`\`\`
-
-\`\`\`php
-namespace App\\Pipelines\\Order;
-
-use Closure;
-use App\\DTOs\\OrderCalculation;
-
-class CalculateTax
-{
-    public function handle(OrderCalculation $order, Closure $next)
-    {
-        $taxableAmount = max(0, $order->subtotal - $order->discountAmount);
-        $order->taxAmount = $taxableAmount * 0.11; // PPN 11%
-
-        return $next($order);
-    }
-}
-\`\`\`
-
----
-
-## 3. Menjalankan Pipeline
-
-\`\`\`php
-namespace App\\Services;
-
-use Illuminate\\Support\\Facades\\Pipeline;
-use App\\DTOs\\OrderCalculation;
-use App\\Pipelines\\Order\\ApplyCouponDiscount;
-use App\\Pipelines\\Order\\CalculateTax;
-use App\\Pipelines\\Order\\ApplyShippingFee;
-
-class OrderPriceCalculator
-{
-    public function calculate(OrderCalculation $order): OrderCalculation
-    {
-        return Pipeline::send($order)
-            ->through([
-                ApplyCouponDiscount::class,
-                CalculateTax::class,
-                ApplyShippingFee::class,
-            ])
-            ->thenReturn();
-    }
-}
-\`\`\`
-
----
-
-## Kesimpulan
-
-Dengan Pipeline Pattern, kode Anda sepenuhnya mematuhi prinsip **Single Responsibility Principle (SRP)** dan **Open/Closed Principle (OCP)**: menambahkan aturan perhitungan baru tidak akan merusak aturan sebelumnya!
-`
-  },
-  {
-    slug: 'laravel-advanced-eloquent-subqueries',
-    title: 'Advanced Eloquent: Subquery Selects, Window Functions, dan Virtual Columns',
-    description: 'Optimasi query database Laravel dari 50 query menjadi 1 query tunggal berkecepatan tinggi menggunakan addSelect subqueries dan raw expressions.',
-    category: 'Laravel',
-    tags: ['Laravel', 'Eloquent', 'Database', 'MySQL', 'PostgreSQL', 'Performance'],
+    slug: 'laravel-postgresql-high-concurrency-locking',
+    title: 'Optimasi Konkurensi Tinggi: Laravel 11, PHP 8.3 & PostgreSQL Row-Level Locking (SKIP LOCKED)',
+    description: 'Mencegah race condition, double-spending, dan deadlock pada transaksi inventaris & finansial menggunakan SELECT FOR UPDATE SKIP LOCKED di Laravel & PostgreSQL.',
+    category: 'PostgreSQL & Laravel',
+    tags: ['Laravel 11', 'PHP 8.3', 'PostgreSQL', 'Concurrency', 'Database Locking', 'Clean Architecture'],
     readTime: '9 min read',
-    content: `N+1 query problem adalah penyakit paling jamak di aplikasi Laravel. Seringkali developer tergoda melakukan iterasi koleksi di PHP untuk mengambil data relasi terakhir, yang berujung pada konsumsi memori tinggi dan response time yang lambat.
+    content: `Dalam sistem transaksi finansial dan manajemen inventaris e-commerce dengan lalu lintas tinggi, masalah paling umum yang dihadapi backend engineer adalah **race condition**. Dua request yang tiba di milidetik yang sama dapat membaca stok yang sama, memvalidasinya, lalu sama-sama mengurangi saldo atau kuota, berujung pada *overselling* atau *double-spending*.
 
-Mari kita pelajari cara menggunakan **Subquery Selects** di Eloquent untuk menyelesaikan masalah ini langsung di level database engine.
+Kombinasi **Laravel 11**, **PHP 8.3**, dan fitur native **PostgreSQL row-level locking** (\`SELECT FOR UPDATE SKIP LOCKED\`) memberikan solusi performa tinggi tanpa perlu distributed lock Redis yang rumit.
 
 ---
 
-## 1. Mengambil Nilai Terakhir Tanpa N+1
+## 1. Masalah dengan Locking Konvensional
 
-Bayangkan kita ingin menampilkan daftar postingan blog beserta komentar terakhir yang masuk dan nama penulis komentar tersebut:
+Pendekatan umum biasanya mengandalkan transaction biasa atau \`lockForUpdate()\`:
 
-### Pendekatan Lambat (N+1 Query):
 \`\`\`php
-// Membaca ribuan komentar ke memory hanya untuk ambil satu per post
-$posts = Post::with('comments')->get();
+// Pendekatan standar: Rentan antrean bottleneck dan Deadlock
+DB::transaction(function () use ($productId, $quantity) {
+    $product = Product::where('id', $productId)->lockForUpdate()->first();
+
+    if ($product->stock >= $quantity) {
+        $product->decrement('stock', $quantity);
+        return true;
+    }
+
+    throw new InsufficientStockException();
+});
 \`\`\`
 
-### Pendekatan Cepat (Subquery Select):
+Ketika 500 worker memproses antrean pesanan untuk item populer secara bersamaan, 499 worker akan terblokir menunggu lock dirilis. Ini menyebabkan lonjakan koneksi database (*connection pool exhaustion*) dan latency meroket.
+
+---
+
+## 2. Solusi Elegan: PostgreSQL SKIP LOCKED
+
+PostgreSQL menyediakan modifier \`SKIP LOCKED\`. Alih-alih menunggu baris yang terkunci, database akan langsung melewati baris yang sedang diproses transaksi lain dan mengambil baris berikutnya yang bebas:
+
+\`\`\`sql
+SELECT * FROM job_tickets 
+WHERE status = 'pending' 
+ORDER BY priority DESC 
+LIMIT 1 
+FOR UPDATE SKIP LOCKED;
+\`\`\`
+
+### Implementasi di Laravel 11:
+
 \`\`\`php
-$posts = Post::query()
-    ->addSelect([
-        'latest_comment_body' => Comment::select('body')
-            ->whereColumn('post_id', 'posts.id')
-            ->latest()
-            ->take(1),
-        'latest_commenter_name' => User::select('name')
-            ->whereIn('id', function ($query) {
-                $query->select('user_id')
-                    ->from('comments')
-                    ->whereColumn('post_id', 'posts.id')
-                    ->latest()
-                    ->take(1);
-            })
-    ])
+namespace App\\Services;
+
+use App\\Models\\OrderTicket;
+use Illuminate\\Support\\Facades\\DB;
+
+class TicketProcessingService
+{
+    public function claimNextTicket(int $workerId): ?OrderTicket
+    {
+        return DB::transaction(function () use ($workerId) {
+            /** @var OrderTicket|null $ticket */
+            $ticket = OrderTicket::query()
+                ->where('status', 'pending')
+                ->orderBy('created_at', 'asc')
+                ->lock('FOR UPDATE SKIP LOCKED')
+                ->first();
+
+            if (! $ticket) {
+                return null;
+            }
+
+            $ticket->update([
+                'status' => 'processing',
+                'assigned_worker_id' => $workerId,
+                'claimed_at' => now(),
+            ]);
+
+            return $ticket;
+        });
+    }
+}
+\`\`\`
+
+Dengan \`lock('FOR UPDATE SKIP LOCKED')\`, 50 worker paralel dapat mengambil 50 tiket berbeda secara instan dalam 1 query tanpa ada satupun yang tertahan atau mengalami deadlock.
+
+---
+
+## 3. Atomic Decrement dengan PostgreSQL Check Constraint
+
+Untuk perlindungan lapis baja di tingkat basis data, jangan hanya mengandalkan validasi di layer PHP:
+
+\`\`\`sql
+-- Migration PostgreSQL: Pasang check constraint
+ALTER TABLE products ADD CONSTRAINT check_stock_non_negative CHECK (stock >= 0);
+\`\`\`
+
+Di layer PHP 8.3 / Laravel:
+
+\`\`\`php
+namespace App\\Actions;
+
+use App\\Models\\Product;
+use Illuminate\\Database\\QueryException;
+
+final readonly class DeductStockAction
+{
+    public function execute(int $productId, int $amount): bool
+    {
+        try {
+            // Atomic update langsung di PostgreSQL engine
+            $affected = Product::where('id', $productId)
+                ->where('stock', '>=', $amount)
+                ->decrement('stock', $amount);
+
+            return $affected > 0;
+        } catch (QueryException $e) {
+            // Tertangkap aman jika constraint terlanggar
+            report($e);
+            return false;
+        }
+    }
+}
+\`\`\`
+
+---
+
+## 4. Analisis Performa: EXPLAIN ANALYZE
+
+Pastikan kolom indeks komposit di PostgreSQL tepat sasaran:
+
+\`\`\`sql
+CREATE INDEX CONCURRENTLY idx_orders_status_created 
+ON order_tickets (status, created_at) 
+WHERE status = 'pending'; -- Partial index super cepat
+\`\`\`
+
+Partial index di PostgreSQL hanya mengindeks baris yang bernilai \`pending\`, menghemat memori RAM database hingga 90% dibanding mengindeks seluruh tabel historis.
+
+---
+
+## Kesimpulan
+
+Menggabungkan kemampuan expressif Laravel 11, efisiensi pengetikan PHP 8.3 (readonly class & strict typing), serta kehebatan engine PostgreSQL (Partial Indexes & SKIP LOCKED) memungkinkan backend menangani lonjakan transaksi konkurensi ekstrem dengan zero race condition dan latensi minimal.
+`
+  },
+  {
+    slug: 'postgresql-gin-indexing-laravel-jsonb',
+    title: 'PostgreSQL JSONB & GIN Indexing di Laravel: Arsitektur Hybrid Relational & NoSQL',
+    description: 'Memanfaatkan tipe data JSONB PostgreSQL dan GIN (Generalized Inverted Index) di Laravel untuk fleksibilitas skema dinamis dengan kecepatan query setara relasional murni.',
+    category: 'PostgreSQL & Laravel',
+    tags: ['PostgreSQL', 'JSONB', 'GIN Index', 'Laravel 11', 'Database Architecture'],
+    readTime: '8 min read',
+    content: `Kerap kali arsitektur aplikasi membutuhkan fleksibilitas atribut produk (seperti spesifikasi gadget, metadata invoice, atau parameter audit payload) yang dinamis. Developer sering terburu-buru mengadopsi database NoSQL terpisah seperti MongoDB, yang menambah kompleksitas infrastruktur dan kehilangan jaminan integritas ACID.
+
+Dengan **PostgreSQL JSONB** yang diintegrasikan secara native di **Laravel 11**, kita mendapatkan fleksibilitas dokumen NoSQL sekaligus kekuatan relasional dalam satu database.
+
+---
+
+## 1. Migrasi dan GIN Index di PostgreSQL
+
+Untuk mengindeks atribut JSONB agar query pencarian sub-key secepat kilat:
+
+\`\`\`php
+use Illuminate\\Database\\Migrations\\Migration;
+use Illuminate\\Database\\Schema\\Blueprint;
+use Illuminate\\Support\\Facades\\DB;
+use Illuminate\\Support\\Facades\\Schema;
+
+return new class extends Migration {
+    public function up(): void
+    {
+        Schema::create('product_variants', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
+            $table->string('sku')->unique();
+            $table->jsonb('attributes'); // Kolom JSONB binary format
+            $table->timestamps();
+        });
+
+        // Buat GIN Index menggunakan operator jsonb_path_ops untuk optimasi containment (@>)
+        DB::statement('CREATE INDEX idx_product_variants_attributes_gin ON product_variants USING gin (attributes jsonb_path_ops)');
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('product_variants');
+    }
+};
+\`\`\`
+
+---
+
+## 2. Eloquent Casts & Querying JSONB di Laravel
+
+\`\`\`php
+namespace App\\Models;
+
+use Illuminate\\Database\\Eloquent\\Model;
+use Illuminate\\Database\\Eloquent\\Casts\\AsArrayObject;
+
+class ProductVariant extends Model
+{
+    protected $casts = [
+        'attributes' => AsArrayObject::class,
+    ];
+}
+\`\`\`
+
+Querying atribut nested menggunakan operator arrow syntax Laravel yang diterjemahkan langsung ke operator JSONB PostgreSQL (\`->>\` dan \`@>\`):
+
+\`\`\`php
+// Mencari produk dengan RAM 16GB dan Warna Hitam
+$variants = ProductVariant::query()
+    ->where('attributes->ram', '16GB')
+    ->where('attributes->color', 'Black')
+    ->get();
+
+// Query containment menggunakan Raw JSONB containment (@>) yang sepenuhnya memanfaatkan GIN Index:
+$variants = ProductVariant::query()
+    ->whereRaw('attributes @> ?', [json_encode(['specs' => ['connectivity' => '5G']])])
     ->get();
 \`\`\`
 
-Database akan mengeksekusinya dalam **1 query tunggal**, dan nilai \`$post->latest_comment_body\` langsung tersedia di model tanpa overhead relasi berat!
+---
+
+## Kesimpulan
+
+Kombinasi JSONB dan GIN Index di PostgreSQL memberikan performa pencarian dokumen JSON dengan latency sub-milidetik, tanpa harus mengorbankan transaksi ACID dan konsistensi relasi di Laravel.
+`
+  },
+  {
+    slug: 'php83-laravel-memory-management-workers',
+    title: 'Manajemen Memori PHP 8.3 & Garbage Collection pada Background Queue Workers Laravel',
+    description: 'Menganalisis siklus hidup memori PHP di proses daemon background worker Laravel Horizon, mencegah memory leaks, dan konfigurasi Opcache CLI.',
+    category: 'PHP & Laravel',
+    tags: ['PHP 8.3', 'Laravel Horizon', 'Memory Management', 'Garbage Collection', 'DevOps'],
+    readTime: '7 min read',
+    content: `Background worker Laravel (\`php artisan queue:work\` atau **Laravel Horizon**) berjalan secara *long-running daemon*. Berbeda dengan web request biasa yang langsung me-reset memori setelah response selesai, worker terus hidup selama berjam-jam atau berhari-hari.
+
+Kecerobohan kecil seperti mengumpulkan data besar di array statik atau relasi model yang tidak dilepas dapat menyebabkan proses kehabisan alokasi RAM (*OOM - Out of Memory*).
 
 ---
 
-## 2. Dynamic Order by Subquery
+## 1. Siklus Garbage Collector di PHP 8.3
 
-Anda juga bisa melakukan sorting berdasarkan nilai agregat relasi:
+PHP menggunakan *reference counting* dengan mekanisme siklus deteksi (*cycle collector*). Pada proses intensif batch processing:
 
 \`\`\`php
-$destinations = Destination::orderByDesc(
-    Flight::select('arrived_at')
-        ->whereColumn('destination_id', 'destinations.id')
-        ->latest()
-        ->take(1)
-)->get();
+namespace App\\Jobs;
+
+use App\\Models\\Customer;
+use Illuminate\\Bus\\Queueable;
+use Illuminate\\Contracts\\Queue\\ShouldQueue;
+use Illuminate\\Foundation\\Bus\\Dispatchable;
+use Illuminate\\Queue\\InteractsWithQueue;
+use Illuminate\\Queue\\SerializesModels;
+
+class ProcessMonthlyStatementsJob implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    public function handle(): void
+    {
+        // Hindari Customer::all()! Gunakan lazy() atau chunkById()
+        Customer::query()->orderBy('id')->lazyById(500)->each(function (Customer $customer) {
+            $this->generateStatement($customer);
+
+            // Bersihkan reference model di memori
+            unset($customer);
+        });
+
+        // Paksa cycle collection jika memproses data masif
+        gc_collect_cycles();
+    }
+}
 \`\`\`
+
+---
+
+## 2. Aturan Perlindungan Worker di Production
+
+1. **Gunakan Flag \`--max-jobs\` dan \`--max-time\`**:
+   Biarkan worker mati secara graceful setelah memproses 1000 job atau berjalan 1 jam agar supervisor/horizon mem-boot ulang proses dengan kondisi memori bersih.
+
+\`\`\`bash
+php artisan queue:work redis --max-jobs=1000 --max-time=3600 --memory=128
+\`\`\`
+
+2. **Bersihkan Database Query Log**:
+   Pastikan \`DB::disableQueryLog()\` aktif jika menjalankan command manual, karena query log menyimpan setiap string query SQL ke dalam RAM.
 
 ---
 
 ## Kesimpulan
 
-Memahami kekuatan subquery di Eloquent mengubah Anda dari sekadar pengguna ORM dasar menjadi engineer yang mampu mengoptimasi performa backend pada skala database jutaan baris.
+Paham akan manajemen alokasi memori PHP 8.3 dan cara kerja garbage collection menjamin antrean latar belakang aplikasi Anda stabil 24/7 tanpa mengalami crash OOM.
+`
+  },
+  {
+    slug: 'postgresql-partitioning-laravel-timeseries',
+    title: 'Skalabilitas Database: Implementasi Table Partitioning PostgreSQL di Laravel',
+    description: 'Strategi memecah tabel raksasa puluhan juta baris (audit logs, transaksi, timeseries) menjadi partisi bulanan di PostgreSQL dengan query transparan dari Laravel Eloquent.',
+    category: 'PostgreSQL & Laravel',
+    tags: ['PostgreSQL', 'Table Partitioning', 'Laravel 11', 'High Concurrency', 'Database Tuning'],
+    readTime: '10 min read',
+    content: `Ketika tabel log aktivitas, audit trail, atau transaksi e-commerce menembus 20 hingga 100 juta baris, performa B-Tree index mulai menurun drastis karena ukuran index melampaui kapasitas RAM (*Buffer Pool*). Akibatnya, disk I/O meningkat tajam dan latency query meroket.
+
+Solusi standar industri pada **PostgreSQL** adalah **Declarative Table Partitioning**, membagi tabel secara fisik berdasarkan rentang tanggal (*RANGE*) tanpa mengubah cara Laravel melakukan query.
+
+---
+
+## 1. Mendefinisikan Partisi di PostgreSQL
+
+\`\`\`sql
+-- Tabel master berpartisi
+CREATE TABLE audit_logs (
+    id BIGSERIAL,
+    user_id BIGINT,
+    action VARCHAR(255) NOT NULL,
+    payload JSONB,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    PRIMARY KEY (id, created_at)
+) PARTITION BY RANGE (created_at);
+
+-- Partisi bulanan
+CREATE TABLE audit_logs_2026_10 PARTITION OF audit_logs
+    FOR VALUES FROM ('2026-10-01 00:00:00+00') TO ('2026-11-01 00:00:00+00');
+
+CREATE TABLE audit_logs_2026_11 PARTITION OF audit_logs
+    FOR VALUES FROM ('2026-11-01 00:00:00+00') TO ('2026-12-01 00:00:00+00');
+\`\`\`
+
+---
+
+## 2. Partition Pruning: Kunci Kecepatan PostgreSQL
+
+Saat query dilakukan dengan menyertakan rentang tanggal:
+
+\`\`\`php
+$logs = AuditLog::query()
+    ->whereBetween('created_at', ['2026-10-15', '2026-10-20'])
+    ->where('user_id', 42)
+    ->get();
+\`\`\`
+
+Planner PostgreSQL secara otomatis melakukan **Partition Pruning**: ia hanya memindai tabel \`audit_logs_2026_10\` dan mengabaikan lusinan partisi lainnya. Ukuran scan berkurang 95%, dan seluruh indeks partisi muat di memori RAM!
+
+---
+
+## Kesimpulan
+
+Dengan Table Partitioning PostgreSQL, basis data Laravel Anda siap menangani pertumbuhan data hingga ratusan gigabyte tanpa degradasi performa sama sekali.
+`
+  },
+  {
+    slug: 'laravel-postgresql-explain-analyze-indexes',
+    title: 'Diagnostic Deep Dive: Membedah EXPLAIN ANALYZE PostgreSQL untuk Mengeliminasi Sequential Scan di Laravel',
+    description: 'Panduan membaca execution plan PostgreSQL (Seq Scan vs Index Scan vs Bitmap Heap Scan) dan strategi tuning query lambat pada aplikasi Laravel berskala besar.',
+    category: 'PostgreSQL & Laravel',
+    tags: ['PostgreSQL', 'EXPLAIN ANALYZE', 'Laravel 11', 'Database Optimization', 'SQL'],
+    readTime: '8 min read',
+    content: `Banyak pengembang menganggap bahwa memasang indeks pada kolom foreign key sudah cukup untuk menjamin performa database. Namun di lingkungan produksi dengan jutaan baris data, planner PostgreSQL terkadang tetap memilih **Sequential Scan** (membaca seluruh isi hard disk).
+
+Menguasai pembacaan \`EXPLAIN (ANALYZE, BUFFERS)\` adalah keahlian wajib seorang senior backend engineer.
+
+---
+
+## 1. Menjalankan EXPLAIN ANALYZE dari Laravel
+
+Anda dapat menambahkan macro debugging ringkas pada query builder Laravel:
+
+\`\`\`php
+// app/Providers/AppServiceProvider.php
+use Illuminate\\Database\\Query\\Builder;
+
+Builder::macro('explainAnalyze', function () {
+    return DB::select('EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON) ' . $this->toSql(), $this->getBindings());
+});
+\`\`\`
+
+---
+
+## 2. Mengenal Tipe Node Eksekusi PostgreSQL
+
+1. **Seq Scan (Sequential Scan)**:
+   Membaca seluruh baris tabel dari awal hingga akhir. Ideal hanya jika mengambil >30% dari total baris. Menjadi bencana jika tabel berisi 10 juta baris!
+2. **Index Scan**:
+   Mencari pointer baris langsung dari B-Tree index dan membaca baris dari heap tabel. Sangat cepat untuk selektivitas tinggi.
+3. **Bitmap Index Scan + Bitmap Heap Scan**:
+   PostgreSQL mengumpulkan daftar halaman memori dari index ke dalam bitmap bitstream, lalu membacanya secara terurut untuk meminimalkan random disk I/O.
+
+---
+
+## Kesimpulan
+
+Mengetahui cara kerja planner PostgreSQL dan memvalidasinya lewat EXPLAIN ANALYZE menghilangkan tebak-tebakan dalam optimasi performa database aplikasi Laravel Anda.
 `
   }
 ];
 
 function run() {
-  console.log('[Blog Generator] Checking existing Laravel blog articles...');
+  console.log('[Blog Generator] Checking existing Laravel, PHP & PostgreSQL blog articles...');
 
   // Get current files
   const existingFiles = fs.readdirSync(blogDir).filter(f => f.endsWith('.md'));
@@ -449,15 +434,28 @@ function run() {
   // If all catalog topics are written, generate a timestamped specialized topic
   if (!selected) {
     const timestamp = Date.now();
-    const dynamicSlug = `laravel-engineering-deep-dive-${timestamp}`;
+    const dynamicSlug = `laravel-php-postgresql-deep-dive-${timestamp}`;
     selected = {
       slug: dynamicSlug,
-      title: `Laravel Modern Architecture & Performance Digest — ${todayStr}`,
-      description: `Analisis mendalam best practice Laravel modern: keamanan API, database indexes, arsitektur micro-services, dan manajemen cache terdistribusi.`,
-      category: 'Laravel',
-      tags: ['Laravel', 'Architecture', 'Performance', 'PHP 8.3', 'Backend'],
-      readTime: '6 min read',
-      content: `Catatan teknis yang membahas praktik terbaik dalam pengembangan backend berskala tinggi dengan Laravel framework dan PHP 8.3+.`
+      title: `Laravel 11, PHP 8.3 & PostgreSQL High-Performance Architecture Digest — ${todayStr}`,
+      description: `Analisis mendalam best practice backend modern: isolasi transaksi database, optimasi koneksi PgBouncer, strict typing PHP 8.3, dan arsitektur event-driven Laravel.`,
+      category: 'PostgreSQL & Laravel',
+      tags: ['Laravel 11', 'PHP 8.3', 'PostgreSQL', 'Architecture', 'High Concurrency', 'Database Optimization'],
+      readTime: '7 min read',
+      content: `Catatan teknis arsitektur rekayasa sistem backend tingkat lanjut yang mengintegrasikan ekosistem framework Laravel 11, efisiensi runtime PHP 8.3+, dan keandalan transaksi basis data PostgreSQL.
+
+---
+
+## 1. Konektivitas & Connection Pooling dengan PgBouncer
+
+Dalam skala ribuan concurrent users, model proses PHP-FPM dapat membuka ribuan koneksi langsung ke PostgreSQL, membebani RAM database server. Penggunaan PgBouncer dalam mode *transaction pooling* menjadi pondasi utama untuk mempertahankan efisiensi throughput transaksi.
+
+---
+
+## 2. Integritas Data & Strict Typing
+
+Penggunaan fitur modern PHP 8.3 seperti \`readonly classes\`, \`typed constants\`, dan penanganan exception yang terstruktur pada layer Domain Model menjamin kontrak bisnis tidak terlanggar sebelum data mencapai layer persistensi PostgreSQL.
+`
     };
   }
 
@@ -483,7 +481,7 @@ ${selected.content.trim()}
   // Rebuild Astro
   console.log('[Blog Generator] Rebuilding Astro static site...');
   try {
-    execSync('bun run build', { cwd: rootDir, stdio: 'inherit' });
+    execSync('/home/risyal/.bun/bin/bun run build', { cwd: rootDir, stdio: 'inherit' });
     console.log('[Blog Generator] ✓ Astro build complete and verified!');
   } catch (err) {
     console.warn('[Blog Generator] Warning: bun build failed or bun not available, attempting npm run build...');
