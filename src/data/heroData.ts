@@ -30,5 +30,6 @@ export const heroData = {
     github: 'https://github.com/risyalf',
     linkedin: 'https://www.linkedin.com/in/risyal-febrianto/',
     email: 'risyalfebrianto97@gmail.com',
+    resume: '/resume/RISYAL_FEBRIANTO_RESUME.pdf',
   },
 };

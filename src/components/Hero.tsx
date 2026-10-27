@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Mail, Linkedin, Github } from 'lucide-react';
+import { ArrowRight, Mail, Linkedin, Github, Download } from 'lucide-react';
 import { heroData } from '@/data/heroData';
 
 const Hero: React.FC = () => {
@@ -40,6 +40,19 @@ const Hero: React.FC = () => {
             >
               <span>Explore Projects</span>
               <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </a>
+
+            <a
+              href={heroData.contact.resume}
+              download="RISYAL_FEBRIANTO_RESUME.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-secondary"
+              aria-label="Download Resume"
+            >
+              {/* ponytail: static resume file download link; add download analytics or preview modal if requested */}
+              <Download className="mr-2 h-4 w-4 text-[hsl(var(--accent))]" />
+              <span>Download Resume</span>
             </a>
 
             <a
