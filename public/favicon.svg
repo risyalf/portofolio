@@ -1,4 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-  <circle cx="24" cy="24" r="24" fill="#F2F2F2"/>
-  <circle cx="24" cy="24" r="12" fill="#020202"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#3b82f6" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <!-- Background squircle -->
+  <rect width="64" height="64" rx="16" fill="url(#bg)"/>
+  <rect width="62" height="62" x="1" y="1" rx="15" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-opacity="0.3"/>
+  
+  <!-- Stylized Monogram R -->
+  <path d="M20 16 h14 c7.5 0 13 4.5 13 11.5 c0 5.2 -3.2 9.2 -8 10.7 l9.5 13.8 h-8.5 l-8.5 -12.5 h-4.5 v12.5 h-7 z M27 33 h6.5 c3.8 0 6.5 -2.2 6.5 -5.8 c0 -3.6 -2.7 -5.7 -6.5 -5.7 h-6.5 z" fill="url(#primaryGrad)" filter="url(#glow)"/>
+
+  <!-- Live Pulse Dot -->
+  <circle cx="48" cy="16" r="3.5" fill="#10b981"/>
 </svg>
