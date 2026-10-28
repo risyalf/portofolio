@@ -123,11 +123,13 @@ export const projects: Project[] = [
     slug: "listromart-ecommerce-platform",
     title: "E-Commerce Website Development",
     role: "Full-Stack Web Developer",
-    timeline: "2022 - 2023",
+    timeline: "2022 - 2024",
     summary: "Develop e-commerce website with user-friendly interface.",
-    overview: "Platform toko daring (e-commerce) B2C lengkap dengan katalog produk terstruktur, manajemen inventaris stok terintegrasi dengan MySQL, sistem keranjang belanja interaktif, serta alur checkout yang efisien dan aman.",
+    overview: "Platform toko daring (e-commerce) B2C & B2B retail peralatan listrik dan plumbing lengkap dengan katalog produk terstruktur, manajemen inventaris stok terintegrasi dengan MySQL, sistem keranjang belanja interaktif, serta alur checkout dan wholesale membership yang efisien.",
     link: "https://listromart.com",
     images: [
+      "/experience/listromart/listromart_home_new.png",
+      "/experience/listromart/listromart_products_new.png",
       "/experience/0.png",
       "/experience/6.png",
       "/experience/1.jpeg",
@@ -136,11 +138,15 @@ export const projects: Project[] = [
       "/experience/4.jpeg",
       "/experience/5.jpeg",
     ],
-    tags: ["E-Commerce", "MySQL", "User Friendly", "Catalog System", "Shopping Cart", "Checkout Engine"],
+    tags: ["E-Commerce", "MySQL", "User Friendly", "Catalog System", "Shopping Cart", "Checkout Engine", "Wholesale Loyalty"],
     architectureHighlights: [
       {
+        title: "Modernized High-Converting Storefront",
+        description: "Pembaruan antarmuka e-commerce modern dengan pencarian instan, integrasi reward poin pelanggan, banner promo interaktif, dan navigasi kategori cepat."
+      },
+      {
         title: "Optimized Relational Database Schema",
-        description: "Desain skema MySQL dengan normalisasi tepat dan indexing pada tabel produk, kategori, dan pesanan guna mencegah bottleneck saat traffic spike."
+        description: "Desain skema MySQL dengan normalisasi tepat dan indexing pada tabel produk, varian grosir, dan pesanan guna mencegah bottleneck saat traffic spike."
       },
       {
         title: "Frictionless Checkout Funnel",
@@ -148,12 +154,12 @@ export const projects: Project[] = [
       }
     ],
     details: {
-      challenge: "The company needed a user-friendly e-commerce platform to enhance customer experience and streamline online sales.",
-      solution: "Developed a responsive e-commerce website using modern web technologies, ensuring seamless navigation and efficient checkout processes.",
+      challenge: "The company needed a modern, user-friendly e-commerce platform to showcase electrical & plumbing supplies, enhance customer retention, and streamline both retail and wholesale online sales.",
+      solution: "Developed and upgraded a responsive e-commerce website using modern web technologies, ensuring seamless navigation, high-speed product catalog browsing, and efficient checkout processes.",
       impact: [
-        "Increased online sales by 30% within the first quarter after launch.",
-        "Received positive feedback from customers regarding the website's usability.",
-        "Reduced cart abandonment rates by 15% through optimized checkout flow."
+        "Delivered a refreshed, modern storefront with high user retention and lower bounce rates.",
+        "Increased online sales by over 30% with streamlined mobile and desktop browsing.",
+        "Supported multi-tier customer pricing and reward point loyalty systems seamlessly."
       ]
     }
   },
@@ -194,6 +200,61 @@ export const projects: Project[] = [
         "Eliminated manual paperwork and reduced HR recording workload by over 60%.",
         "Provided real-time management dashboard visibility into staff attendance."
       ]
+    }
+  },
+  {
+    id: 5,
+    slug: "digiexam-student-assessment-platform",
+    title: "DigiExam — Computer-Based Testing (CBT) Platform",
+    role: "Backend Architect & System Engineer",
+    timeline: "2024",
+    summary: "A modern web-based student assessment & exam management platform built with Laravel 12, Filament v3, and Flutter Web.",
+    overview: "Platform Computer-Based Testing (CBT) dan sistem asesmen siswa modern berskala institusi pendidikan. Dirancang untuk menyelenggarakan ujian digital secara terpadu dengan bank soal terenkripsi, dynamic token access per sesi ujian, pengawasan real-time, kalkulasi nilai otomatis, serta panel administrasi berbasis Filament v3 dan antarmuka pengerjaan siswa via Flutter Web.",
+    link: "https://github.com/risyalf/digiexam-demo",
+    images: [
+      "/experience/digiexam/image-1.png",
+      "/experience/digiexam/image-2.png",
+      "/experience/digiexam/image-3.png",
+      "/experience/digiexam/image-4.png",
+      "/experience/digiexam/image-5.png",
+      "/experience/digiexam/image-6.png",
+      "/experience/digiexam/image-7.png",
+      "/experience/digiexam/image-8.png",
+      "/experience/digiexam/image-9.png",
+      "/experience/digiexam/image-10.png",
+      "/experience/digiexam/image-11.png",
+      "/experience/digiexam/image.png",
+    ],
+    tags: ["Laravel 12", "PHP 8.4", "Filament v3", "Flutter Web", "CBT System", "Assessment Engine", "REST API", "Database Optimization"],
+    architectureHighlights: [
+      {
+        title: "High-Throughput Exam Submission Engine",
+        description: "Arsitektur endpoint backend tangguh untuk menangani konkurensi ribuan siswa yang mengumpulkan jawaban secara bersamaan tanpa race condition atau lock contention."
+      },
+      {
+        title: "Session Token & Fraud Prevention Protocol",
+        description: "Sistem verifikasi token dinamis dengan validasi waktu aktif ujian, pencegahan sesi ganda, dan proteksi integritas lembar jawaban siswa."
+      },
+      {
+        title: "Modern Administration Panel (Filament v3)",
+        description: "Panel kendali terpadu untuk manajemen bank soal hierarkis, distribusi kelas, alokasi guru penguji, dan rekapitulasi nilai otomatis."
+      }
+    ],
+    details: {
+      challenge:
+        "Sekolah dan institusi pendidikan membutuhkan sistem ujian terkomputerisasi yang handal, mampu memitigasi kecurangan, mudah dikelola oleh dewan guru, dan tetap stabil saat diakses serentak oleh ratusan hingga ribuan siswa.",
+      solution:
+        "Membangun arsitektur backend kokoh menggunakan Laravel 12 dan PHP 8.4 dengan Filament v3 sebagai control panel guru/admin, diintegrasikan dengan aplikasi klien Flutter Web berlatensi rendah untuk pengalaman pengerjaan ujian yang mulus dan responsif.",
+      impact: [
+        "Mengotomatisasi 100% proses rekapitulasi dan penilaian hasil ujian secara real-time.",
+        "Mengeliminasi biaya dan logistik pencetakan kertas ujian fisik secara total.",
+        "Menjamin stabilitas konkurensi tinggi selama jam sibuk pelaksanaan ujian sekolah serentak.",
+        "Mencegah kecurangan ujian dengan sistem tokenisasi sesi dan pemantauan status pengerjaan."
+      ]
+    },
+    externalLink: {
+      title: "GitHub Repository (Demo)",
+      url: "https://github.com/risyalf/digiexam-demo"
     }
   },
 ];
