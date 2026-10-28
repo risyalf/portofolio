@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: process.env.SITE_URL || 'https://risyalf.github.io',
+  site: process.env.SITE_URL || 'https://porto.risyal.web.id',
   output: 'static',
   build: {
     inlineStylesheets: 'always',

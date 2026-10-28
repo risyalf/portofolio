@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Sitemaps
-Sitemap: https://risyalf.github.io/sitemap-index.xml
+Sitemap: https://porto.risyal.web.id/sitemap-index.xml

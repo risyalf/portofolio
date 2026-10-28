@@ -1,6 +1,6 @@
 export const config = {
   siteTitle: 'Risyal Febrianto — Senior Full-Stack & Laravel Backend Engineer',
-  siteUrl: 'https://risyalf.github.io',
+  siteUrl: 'https://porto.risyal.web.id',
   description:
     'Full-Stack Developer specializing in enterprise Laravel architectures, high-concurrency PHP 8.3 systems, database optimization, and scalable web platforms.',
   author: 'Risyal Febrianto',
