@@ -30,8 +30,8 @@ export const projects: Project[] = [
     title: "DigiExam — Computer-Based Testing (CBT) Platform",
     role: "Backend Architect & System Engineer",
     timeline: "2024",
-    summary: "A modern web-based student assessment & exam management platform built with Laravel 12, Filament v3, and Flutter Web.",
-    overview: "Platform Computer-Based Testing (CBT) dan sistem asesmen siswa modern berskala institusi pendidikan. Dirancang untuk menyelenggarakan ujian digital secara terpadu dengan bank soal terenkripsi, dynamic token access per sesi ujian, pengawasan real-time, kalkulasi nilai otomatis, serta panel administrasi berbasis Filament v3 dan antarmuka pengerjaan siswa via Flutter Web.",
+    summary: "A modern student assessment & exam management ecosystem with Laravel 12, Filament v3, Flutter Web, and an Android Kiosk App with screen pinning.",
+    overview: "Platform Computer-Based Testing (CBT) dan sistem asesmen siswa modern berskala institusi pendidikan. Dirancang untuk menyelenggarakan ujian digital secara terpadu melalui panel administrasi Filament v3, antarmuka pengerjaan siswa via Flutter Web, serta aplikasi native Android dengan fitur Kiosk Mode (Screen Pinning / Lock Task) agar siswa terkunci pada aplikasi dan tidak dapat membuka aplikasi lain selama ujian berlangsung.",
     link: "https://demo.admin.digiexam.web.id/admin/login",
     images: [
       "/experience/digiexam/assessment_web_login.png",
@@ -48,15 +48,19 @@ export const projects: Project[] = [
       "/experience/digiexam/image-10.png",
       "/experience/digiexam/image-11.png",
     ],
-    tags: ["Laravel 12", "PHP 8.4", "Filament v3", "Flutter Web", "CBT System", "Assessment Engine", "REST API", "Database Optimization"],
+    tags: ["Laravel 12", "PHP 8.4", "Filament v3", "Flutter Web", "Android Kiosk App", "Screen Pinning", "CBT System", "Anti-Cheat Engine", "Database Optimization"],
     architectureHighlights: [
+      {
+        title: "Android Kiosk Mode & Screen Pinning Protocol",
+        description: "Implementasi LockTask / Screen Pinning pada aplikasi Android untuk mengunci layar siswa selama sesi ujian, memblokir tombol home/recent apps, floating window, dan notifikasi guna menjamin integritas ujian."
+      },
       {
         title: "High-Throughput Exam Submission Engine",
         description: "Arsitektur endpoint backend tangguh untuk menangani konkurensi ribuan siswa yang mengumpulkan jawaban secara bersamaan tanpa race condition atau lock contention."
       },
       {
-        title: "Session Token & Fraud Prevention Protocol",
-        description: "Sistem verifikasi token dinamis dengan validasi waktu aktif ujian, pencegahan sesi ganda, dan proteksi integritas lembar jawaban siswa."
+        title: "Session Token & Multi-Layer Anti-Cheat",
+        description: "Sistem verifikasi token dinamis dengan validasi waktu aktif ujian, pencegahan sesi ganda, dan proteksi integritas lembar jawaban siswa baik di web maupun Android."
       },
       {
         title: "Modern Administration Panel (Filament v3)",
@@ -65,14 +69,15 @@ export const projects: Project[] = [
     ],
     details: {
       challenge:
-        "Sekolah dan institusi pendidikan membutuhkan sistem ujian terkomputerisasi yang handal, mampu memitigasi kecurangan, mudah dikelola oleh dewan guru, dan tetap stabil saat diakses serentak oleh ratusan hingga ribuan siswa.",
+        "Sekolah dan institusi pendidikan membutuhkan sistem ujian digital yang tangguh dan terjamin keamanannya dari kecurangan (seperti menyontek via browser, split screen, atau bertukar aplikasi di HP), sekaligus mudah dikelola oleh dewan guru dan sanggup menahan beban ribuan koneksi konkuren.",
       solution:
-        "Membangun arsitektur backend kokoh menggunakan Laravel 12 dan PHP 8.4 dengan Filament v3 sebagai control panel guru/admin, diintegrasikan dengan aplikasi klien Flutter Web berlatensi rendah untuk pengalaman pengerjaan ujian yang mulus dan responsif.",
+        "Membangun ekosistem asesmen komprehensif: Backend Laravel 12 + Filament v3 untuk panel admin guru, antarmuka pengerjaan berbasis Flutter Web, dan aplikasi client Android khusus dengan fitur Screen Pinning / Lock Task (Kiosk Mode) yang mengunci perangkat siswa secara ketat selama jam ujian.",
       impact: [
-        "Mengotomatisasi 100% proses rekapitulasi dan penilaian hasil ujian secara real-time.",
-        "Mengeliminasi biaya dan logistik pencetakan kertas ujian fisik secara total.",
-        "Menjamin stabilitas konkurensi tinggi selama jam sibuk pelaksanaan ujian sekolah serentak.",
-        "Mencegah kecurangan ujian dengan sistem tokenisasi sesi dan pemantauan status pengerjaan."
+        "Eliminasi kecurangan ujian di perangkat mobile melalui Android Kiosk Mode & Screen Pinning.",
+        "Mengotomatisasi 100% proses rekapitulasi dan penilaian hasil ujian secara instan.",
+        "Mengeliminasi biaya dan logistik pencetakan lembar kertas ujian fisik secara total.",
+        "Menjamin zero-downtime dan stabilitas konkurensi tinggi selama ujian serentak.",
+        "Mendukung multi-platform: siswa dapat mengikuti ujian via Web browser maupun APK Android terisolasi."
       ]
     },
     externalLink: {
