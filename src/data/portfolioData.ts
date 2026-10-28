@@ -34,6 +34,7 @@ export const projects: Project[] = [
     overview: "Platform Computer-Based Testing (CBT) dan sistem asesmen siswa modern berskala institusi pendidikan. Dirancang untuk menyelenggarakan ujian digital secara terpadu dengan bank soal terenkripsi, dynamic token access per sesi ujian, pengawasan real-time, kalkulasi nilai otomatis, serta panel administrasi berbasis Filament v3 dan antarmuka pengerjaan siswa via Flutter Web.",
     link: "https://demo.admin.digiexam.web.id/admin/login",
     images: [
+      "/experience/digiexam/assessment_web_login.png",
       "/experience/digiexam/image.png",
       "/experience/digiexam/image-1.png",
       "/experience/digiexam/image-2.png",
