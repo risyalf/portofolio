@@ -26,6 +26,61 @@ export interface Project {
 export const projects: Project[] = [
   {
     id: 1,
+    slug: "digiexam-student-assessment-platform",
+    title: "DigiExam — Computer-Based Testing (CBT) Platform",
+    role: "Backend Architect & System Engineer",
+    timeline: "2024",
+    summary: "A modern web-based student assessment & exam management platform built with Laravel 12, Filament v3, and Flutter Web.",
+    overview: "Platform Computer-Based Testing (CBT) dan sistem asesmen siswa modern berskala institusi pendidikan. Dirancang untuk menyelenggarakan ujian digital secara terpadu dengan bank soal terenkripsi, dynamic token access per sesi ujian, pengawasan real-time, kalkulasi nilai otomatis, serta panel administrasi berbasis Filament v3 dan antarmuka pengerjaan siswa via Flutter Web.",
+    link: "https://demo.admin.digiexam.web.id/admin/login",
+    images: [
+      "/experience/digiexam/image.png",
+      "/experience/digiexam/image-1.png",
+      "/experience/digiexam/image-2.png",
+      "/experience/digiexam/image-3.png",
+      "/experience/digiexam/image-4.png",
+      "/experience/digiexam/image-5.png",
+      "/experience/digiexam/image-6.png",
+      "/experience/digiexam/image-7.png",
+      "/experience/digiexam/image-8.png",
+      "/experience/digiexam/image-9.png",
+      "/experience/digiexam/image-10.png",
+      "/experience/digiexam/image-11.png",
+    ],
+    tags: ["Laravel 12", "PHP 8.4", "Filament v3", "Flutter Web", "CBT System", "Assessment Engine", "REST API", "Database Optimization"],
+    architectureHighlights: [
+      {
+        title: "High-Throughput Exam Submission Engine",
+        description: "Arsitektur endpoint backend tangguh untuk menangani konkurensi ribuan siswa yang mengumpulkan jawaban secara bersamaan tanpa race condition atau lock contention."
+      },
+      {
+        title: "Session Token & Fraud Prevention Protocol",
+        description: "Sistem verifikasi token dinamis dengan validasi waktu aktif ujian, pencegahan sesi ganda, dan proteksi integritas lembar jawaban siswa."
+      },
+      {
+        title: "Modern Administration Panel (Filament v3)",
+        description: "Panel kendali terpadu untuk manajemen bank soal hierarkis, distribusi kelas, alokasi guru penguji, dan rekapitulasi nilai otomatis."
+      }
+    ],
+    details: {
+      challenge:
+        "Sekolah dan institusi pendidikan membutuhkan sistem ujian terkomputerisasi yang handal, mampu memitigasi kecurangan, mudah dikelola oleh dewan guru, dan tetap stabil saat diakses serentak oleh ratusan hingga ribuan siswa.",
+      solution:
+        "Membangun arsitektur backend kokoh menggunakan Laravel 12 dan PHP 8.4 dengan Filament v3 sebagai control panel guru/admin, diintegrasikan dengan aplikasi klien Flutter Web berlatensi rendah untuk pengalaman pengerjaan ujian yang mulus dan responsif.",
+      impact: [
+        "Mengotomatisasi 100% proses rekapitulasi dan penilaian hasil ujian secara real-time.",
+        "Mengeliminasi biaya dan logistik pencetakan kertas ujian fisik secara total.",
+        "Menjamin stabilitas konkurensi tinggi selama jam sibuk pelaksanaan ujian sekolah serentak.",
+        "Mencegah kecurangan ujian dengan sistem tokenisasi sesi dan pemantauan status pengerjaan."
+      ]
+    },
+    externalLink: {
+      title: "GitHub Repository (Demo)",
+      url: "https://github.com/risyalf/digiexam-demo"
+    }
+  },
+  {
+    id: 2,
     slug: "ntk-pump-clinic-management",
     title: "NTK Pump Clinic Management Website",
     role: "Lead Full-Stack Engineer & Architect",
@@ -78,7 +133,7 @@ export const projects: Project[] = [
     }
   },
   {
-    id: 2,
+    id: 3,
     slug: "landing-page-company-profile",
     title: "Landing Page & Company Profile Development",
     role: "Frontend Engineer & UI/UX Specialist",
@@ -119,7 +174,7 @@ export const projects: Project[] = [
     }
   },
   {
-    id: 3,
+    id: 4,
     slug: "listromart-ecommerce-platform",
     title: "E-Commerce Website Development",
     role: "Full-Stack Web Developer",
@@ -164,7 +219,7 @@ export const projects: Project[] = [
     }
   },
   {
-    id: 4,
+    id: 5,
     slug: "listromart-attendance-management",
     title: "Attendance Website Development",
     role: "Full-Stack Developer",
@@ -200,61 +255,6 @@ export const projects: Project[] = [
         "Eliminated manual paperwork and reduced HR recording workload by over 60%.",
         "Provided real-time management dashboard visibility into staff attendance."
       ]
-    }
-  },
-  {
-    id: 5,
-    slug: "digiexam-student-assessment-platform",
-    title: "DigiExam — Computer-Based Testing (CBT) Platform",
-    role: "Backend Architect & System Engineer",
-    timeline: "2024",
-    summary: "A modern web-based student assessment & exam management platform built with Laravel 12, Filament v3, and Flutter Web.",
-    overview: "Platform Computer-Based Testing (CBT) dan sistem asesmen siswa modern berskala institusi pendidikan. Dirancang untuk menyelenggarakan ujian digital secara terpadu dengan bank soal terenkripsi, dynamic token access per sesi ujian, pengawasan real-time, kalkulasi nilai otomatis, serta panel administrasi berbasis Filament v3 dan antarmuka pengerjaan siswa via Flutter Web.",
-    link: "https://github.com/risyalf/digiexam-demo",
-    images: [
-      "/experience/digiexam/image-1.png",
-      "/experience/digiexam/image-2.png",
-      "/experience/digiexam/image-3.png",
-      "/experience/digiexam/image-4.png",
-      "/experience/digiexam/image-5.png",
-      "/experience/digiexam/image-6.png",
-      "/experience/digiexam/image-7.png",
-      "/experience/digiexam/image-8.png",
-      "/experience/digiexam/image-9.png",
-      "/experience/digiexam/image-10.png",
-      "/experience/digiexam/image-11.png",
-      "/experience/digiexam/image.png",
-    ],
-    tags: ["Laravel 12", "PHP 8.4", "Filament v3", "Flutter Web", "CBT System", "Assessment Engine", "REST API", "Database Optimization"],
-    architectureHighlights: [
-      {
-        title: "High-Throughput Exam Submission Engine",
-        description: "Arsitektur endpoint backend tangguh untuk menangani konkurensi ribuan siswa yang mengumpulkan jawaban secara bersamaan tanpa race condition atau lock contention."
-      },
-      {
-        title: "Session Token & Fraud Prevention Protocol",
-        description: "Sistem verifikasi token dinamis dengan validasi waktu aktif ujian, pencegahan sesi ganda, dan proteksi integritas lembar jawaban siswa."
-      },
-      {
-        title: "Modern Administration Panel (Filament v3)",
-        description: "Panel kendali terpadu untuk manajemen bank soal hierarkis, distribusi kelas, alokasi guru penguji, dan rekapitulasi nilai otomatis."
-      }
-    ],
-    details: {
-      challenge:
-        "Sekolah dan institusi pendidikan membutuhkan sistem ujian terkomputerisasi yang handal, mampu memitigasi kecurangan, mudah dikelola oleh dewan guru, dan tetap stabil saat diakses serentak oleh ratusan hingga ribuan siswa.",
-      solution:
-        "Membangun arsitektur backend kokoh menggunakan Laravel 12 dan PHP 8.4 dengan Filament v3 sebagai control panel guru/admin, diintegrasikan dengan aplikasi klien Flutter Web berlatensi rendah untuk pengalaman pengerjaan ujian yang mulus dan responsif.",
-      impact: [
-        "Mengotomatisasi 100% proses rekapitulasi dan penilaian hasil ujian secara real-time.",
-        "Mengeliminasi biaya dan logistik pencetakan kertas ujian fisik secara total.",
-        "Menjamin stabilitas konkurensi tinggi selama jam sibuk pelaksanaan ujian sekolah serentak.",
-        "Mencegah kecurangan ujian dengan sistem tokenisasi sesi dan pemantauan status pengerjaan."
-      ]
-    },
-    externalLink: {
-      title: "GitHub Repository (Demo)",
-      url: "https://github.com/risyalf/digiexam-demo"
     }
   },
 ];
