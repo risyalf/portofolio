@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { ChevronDown, ChevronUp, ExternalLink, Github, FolderGit2, CheckCircle2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { ChevronDown, ChevronUp, ExternalLink, FolderGit2, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { projects, type Project } from '@/data/portfolioData';
 
@@ -76,16 +76,6 @@ const ProjectCarousel = ({ images }: { images: string[] }) => {
 };
 
 const ProjectCard = ({ project }: { project: Project }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const detailsRef = useRef<HTMLDivElement>(null);
-  const [contentHeight, setContentHeight] = useState(0);
-
-  useEffect(() => {
-    if (detailsRef.current) {
-      setContentHeight(detailsRef.current.scrollHeight);
-    }
-  }, [isExpanded]);
-
   return (
     <article className="card-base overflow-hidden flex flex-col justify-between" role="listitem">
       {/* Thumbnail */}
@@ -96,116 +86,70 @@ const ProjectCard = ({ project }: { project: Project }) => {
           
           {/* Tech Tags */}
           <div className="flex flex-wrap gap-1.5" role="list" aria-label="Technologies used">
-            {project.tags.map((tag) => (
+            {project.tags.slice(0, 5).map((tag) => (
               <span key={tag} className="tag-mono" role="listitem">
                 {tag}
               </span>
             ))}
+            {project.tags.length > 5 && (
+              <span className="tag-mono opacity-70">
+                +{project.tags.length - 5}
+              </span>
+            )}
           </div>
 
           {/* Title & Summary */}
           <div>
             <h3 className="font-display font-bold text-xl sm:text-2xl text-[hsl(var(--fg))] mb-2 hover:text-[hsl(var(--accent))] transition-colors">
               <a
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={`/projects/${project.slug}/`}
                 className="inline-flex items-center gap-1.5"
               >
                 <span>{project.title}</span>
-                <ExternalLink className="w-4 h-4 text-[hsl(var(--fg-muted))]" />
+                <span className="text-xs font-mono text-[hsl(var(--accent))] ml-1">→</span>
               </a>
             </h3>
-            <p className="text-body text-sm text-[hsl(var(--fg-muted))] leading-relaxed">
+            <p className="text-body text-sm text-[hsl(var(--fg-muted))] leading-relaxed line-clamp-3">
               {project.summary}
             </p>
           </div>
 
-          {/* Expandable Case Study Details */}
-          <div
-            ref={detailsRef}
-            className={cn(
-              "overflow-hidden transition-all duration-300 ease-in-out",
-              isExpanded ? 'opacity-100' : 'max-h-0 opacity-0'
-            )}
-            style={{ maxHeight: isExpanded ? `${contentHeight + 40}px` : '0' }}
-          >
-            <div className="pt-4 border-t border-[hsl(var(--border))] space-y-5 text-sm" id={`project-details-${project.id}`}>
-              <div className="space-y-1.5">
-                <h4 className="font-display font-semibold text-xs uppercase tracking-wider text-[hsl(var(--fg-muted))]">
-                  The Challenge
-                </h4>
-                <p className="text-[hsl(var(--fg))] text-xs sm:text-sm leading-relaxed">
-                  {project.details.challenge}
-                </p>
-              </div>
-
-              <div className="space-y-1.5">
-                <h4 className="font-display font-semibold text-xs uppercase tracking-wider text-[hsl(var(--fg-muted))]">
-                  The Engineering Solution
-                </h4>
-                <p className="text-[hsl(var(--fg))] text-xs sm:text-sm leading-relaxed">
-                  {project.details.solution}
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <h4 className="font-display font-semibold text-xs uppercase tracking-wider text-[hsl(var(--fg-muted))]">
-                  Measurable Impact
-                </h4>
-                <ul className="space-y-1.5 pl-1" role="list">
-                  {project.details.impact.map((item, index) => (
-                    <li key={index} className="flex items-start gap-2 text-xs sm:text-sm text-[hsl(var(--fg-muted))]">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {(project.externalLink || project.link) && (
-                <div className="flex flex-wrap gap-3 pt-3 border-t border-[hsl(var(--border))]">
-                  <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-secondary text-xs py-2 px-3.5 flex items-center gap-1.5"
-                  >
-                    <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-                    <span>Live Preview</span>
-                  </a>
-                  {project.externalLink && (
-                    <a
-                      href={project.externalLink.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-secondary text-xs py-2 px-3.5 flex items-center gap-1.5"
-                    >
-                      <Github className="h-3.5 w-3.5" aria-hidden="true" />
-                      <span>{project.externalLink.title}</span>
-                    </a>
-                  )}
-                </div>
-              )}
-            </div>
+          {/* Key Impact Highlights */}
+          <div className="pt-3 border-t border-[hsl(var(--border))] space-y-2">
+            <h4 className="font-display font-semibold text-xs uppercase tracking-wider text-[hsl(var(--fg-muted))]">
+              Key Results
+            </h4>
+            <ul className="space-y-1.5 pl-0.5">
+              {project.details.impact.slice(0, 2).map((item, index) => (
+                <li key={index} className="flex items-start gap-2 text-xs text-[hsl(var(--fg-muted))]">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                  <span className="line-clamp-1">{item}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
-        {/* Expand / Collapse Button */}
-        <div className="pt-2">
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="w-full flex items-center justify-between py-2.5 px-3.5 rounded-lg bg-[hsl(var(--bg))] border border-[hsl(var(--border))] hover:border-[hsl(var(--accent)/0.5)] text-xs font-medium text-[hsl(var(--fg))] transition-all"
-            aria-expanded={isExpanded}
-            aria-controls={`project-details-${project.id}`}
+        {/* Action Buttons */}
+        <div className="pt-2 flex items-center gap-2">
+          <a
+            href={`/projects/${project.slug}/`}
+            className="flex-1 flex items-center justify-center py-2.5 px-3.5 rounded-lg bg-[hsl(var(--accent))] text-black font-semibold text-xs transition-opacity hover:opacity-95 gap-1.5 shadow-sm"
           >
-            <span>{isExpanded ? 'Hide Architecture Case Study' : 'View Architecture & Impact'}</span>
-            {isExpanded ? (
-              <ChevronUp className="h-4 w-4 text-[hsl(var(--accent))]" />
-            ) : (
-              <ChevronDown className="h-4 w-4 text-[hsl(var(--fg-muted))]" />
-            )}
-          </button>
+            <span>View Case Study</span>
+            <ChevronDown className="h-4 w-4 rotate-[-90deg]" />
+          </a>
+          {project.link && (
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2.5 rounded-lg bg-[hsl(var(--bg))] border border-[hsl(var(--border))] hover:border-[hsl(var(--accent)/0.5)] text-[hsl(var(--fg-muted))] hover:text-[hsl(var(--fg))] transition-all"
+              title="Visit Live Site"
+            >
+              <ExternalLink className="h-4 w-4" />
+            </a>
+          )}
         </div>
       </div>
     </article>
