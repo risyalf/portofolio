@@ -7,7 +7,7 @@ export const heroData = {
     'Backend-focused software engineer with 4+ years of experience designing mission-critical Warehouse Management Systems (WMS), high-volume ERP integrations, and responsive web applications with Laravel, PHP 8.3, PostgreSQL, and React.',
   profilePicture: '/risyal.webp',
   metrics: [
-    { label: 'Years Experience', value: '5+' },
+    { label: 'Years Experience', value: '4+' },
     { label: 'Production Projects', value: '30+' },
     { label: 'API Uptime Target', value: '99.9%' },
     { label: 'Core Stack', value: 'Laravel / PHP / React' },
