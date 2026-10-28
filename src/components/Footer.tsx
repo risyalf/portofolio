@@ -42,7 +42,15 @@ const Footer: React.FC = () => {
                 <a href="/#projects" className="hover:text-[hsl(var(--fg))] transition-colors">Featured Projects</a>
               </li>
               <li>
-                <a href="/#blog" className="hover:text-[hsl(var(--accent))] transition-colors">Laravel Engineering Lab</a>
+                <a
+                  href="https://alrisdigital.web.id"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[hsl(var(--accent))] transition-colors text-[hsl(var(--accent))] font-medium inline-flex items-center gap-1"
+                >
+                  <span>Alris Digital Agency</span>
+                  <span className="text-[10px]">↗</span>
+                </a>
               </li>
             </ul>
           </div>

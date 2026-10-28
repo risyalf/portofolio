@@ -145,8 +145,8 @@ export const projects: Project[] = [
     role: "Frontend Engineer & UI/UX Specialist",
     timeline: "2023",
     summary: "Developed a modern, responsive landing page to enhance brand presence and credibility.",
-    overview: "Platform web profil bisnis modern dengan performa tinggi dan desain responsif, dilengkapi showcase layanan interaktif, katalog portofolio dinamis, kalkulator paket harga, FAQ accordion, serta formulir kontak terintegrasi.",
-    link: "https://alris-digital.risyal.my.id",
+    overview: "Platform web profil bisnis modern dengan performa tinggi dan desain responsif, dilengkapi showcase layanan interaktif, katalog portofolio dinamis, kalkulator paket harga, FAQ accordion, serta formulir kontak terintegrasi untuk Alris Digital Agency.",
+    link: "https://alrisdigital.web.id",
     images: [
       "/experience/web-porto/awal.png",
       "/experience/web-porto/service.png",
